@@ -1,0 +1,713 @@
+<project default="usage" basedir="." xmlns:sf="antlib:com.salesforce" xmlns:ml="org.missinglink.ant.task.http.HttpClientTask">
+
+    <taskdef uri="antlib:com.salesforce" classpath="lib/salesforce_ant_36.0/ant-salesforce.jar" />
+    <taskdef name="http" uri="org.missinglink.ant.task.http.HttpClientTask" classname="org.missinglink.ant.task.http.HttpClientTask" classpath="lib/ml-ant-http-1.1.3/ml-ant-http-1.1.3.jar"/><!-- Download from https://code.google.com/p/missing-link/ -->
+    
+    <!-- dont use system proxy -->
+    <setproxy proxyHost="172.31.16.122" proxyPort="3128" />
+    
+    <!-- NA, APAC, EMEA pods -->
+    <!-- 96.43.144.0/20 --><!-- 96.43.144.0 - 96.43.159.254 -->
+    <!-- 136.146.0.0/15 --><!-- 136.146.0.0 - 136.147.255.254 -->
+    <!-- 204.14.232.0/21 --><!-- 204.14.232.0 - 204.14.239.254 -->
+    <!-- 85.222.128.0/19 --><!-- 85.222.128.0 - 85.222.159.254 -->
+    <!-- 185.79.140.0/22 --><!-- 185.79.140.0 - 185.79.143.254 -->
+    <!-- 182.50.76.0/22 --><!-- 182.50.76.0 - 182.50.79.254 -->
+    <!-- 202.129.242.0/23 --><!-- 202.129.242.0 - 202.129.243.254 -->
+    
+    <!-- github ip range -->
+    <!-- 192.30.252.0/22 -->
+    
+    <property file="build.properties"/>
+    <property environment="env"/>
+    
+    <target name="pull" description="Pulls (with rebase) the latest remote repository changes.">
+        <exec executable="git">
+            <arg value="pull" />
+            <arg value="--rebase" />
+        </exec>
+    </target>
+
+    <target name="push" description="Pushes (to master) the latest remote repository changes.">
+        <!-- #1010 get rid of bootstrap component -->
+        <fileset id="success.file" dir="src" includes="">
+            <contains text="localhost" />
+        </fileset>
+        <fail message="LOCALHOST string found... are you sure you want to do that?">
+            <condition>
+                <resourcecount when="greater" count="0" refid="success.file" />
+            </condition>
+        </fail>
+        <exec executable="git">
+            <arg value="push" />
+            <arg value="origin" />
+            <arg value="master" />
+        </exec>
+    </target>
+    
+    <target name="retrieve-busconnectedapp" description="Retrieves the SERVICES connected app definitions from their separate packaging org.">
+        <sf:retrieve
+            username="${busconnectedapp.username}"
+            password="${busconnectedapp.password}"
+            serverurl="${busconnectedapp.serverurl}"
+            retrieveTarget="busconnectedapp"
+            unpackaged="busconnectedapp/package.xml"
+        />
+    </target>
+    
+    <target name="retrieve-abstract" description="Retrieves the Abstract.Process from its separate packaging org.">
+        <sf:retrieve
+            username="${abstract.username}"
+            password="${abstract.password}"
+            serverurl="${abstract.serverurl}"
+            retrieveTarget="abstract"
+            unpackaged="abstract/package.xml"
+        />
+    </target>
+    
+    <target name="normalize-whitespace">
+        <!-- finds tabs occupying 1 space -->
+        <replaceregexp flags="mg">
+            <fileset dir="src/classes" />
+            <regexp pattern="^((    )+)   \t" />
+            <substitution expression="\1    "/>
+        </replaceregexp>
+
+        <!-- finds tabs occupying 2 spaces -->
+        <replaceregexp flags="mg">
+            <fileset dir="src/classes" />
+            <regexp pattern="^((    )+)  \t" />
+            <substitution expression="\1    "/>
+        </replaceregexp>
+
+        <!-- finds tabs occupying 3 spaces -->
+        <replaceregexp flags="mg">
+            <fileset dir="src/classes" />
+            <regexp pattern="^((    )+) \t" />
+            <substitution expression="\1    "/>
+        </replaceregexp>
+
+        <!-- finds tabs occupying 4 spaces -->
+        <replaceregexp flags="mg">
+            <fileset dir="src/classes" />
+            <regexp pattern="\t" />
+            <substitution expression="    "/>
+        </replaceregexp>
+        
+        <!-- finds trailing whitespace after code -->
+        <replaceregexp flags="mg">
+            <fileset dir="src/classes" />
+            <regexp pattern="([^\s])[ \t]+$" />
+            <substitution expression="\1"/>
+        </replaceregexp>
+    </target>
+    
+    <target name="agnostic-permissions">
+        <replaceregexp flags="sg    ">
+            <fileset dir="src/permissionsets" />
+            <regexp pattern="\n    &lt;userPermissions&gt;.*&lt;/userPermissions&gt;" />
+            <substitution expression=""/>
+        </replaceregexp>
+    </target>
+    
+    <target name="retrieve" description="Retrieves all package components to dev org">
+        <sf:retrieve
+            username="${de.username}"
+            password="${de.password}"
+            serverurl="${de.serverurl}"
+            retrieveTarget="src"
+            packageNames="Services"
+        />
+        <antcall target="alphabetize-searchlayouts" />
+        <antcall target="optimize-for-release" />
+        <antcall target="normalize-whitespace" />
+        <antcall target="agnostic-permissions" />
+    </target>
+
+    <target name="deploy" description="Deploys all package components to dev org">
+        <antcall target="optimize-for-devorg" />
+        <subant failonerror="false" target="subdeploy" buildpath="." />
+        <executeAnonymous username="${de.username}" password="${de.password}" serverurl="${de.serverurl}">
+            new PostInstallHandler().onInstall(null);
+            ConfigureController.settings(UserInfo.getUserId());
+            ConfigureController.permissions(UserInfo.getUserId());
+            ConfigureController.defaults(UserInfo.getSessionId());
+            ConfigureController.reinstallSchedule();
+        </executeAnonymous>
+        <!-- #684 always try to restart jobs, so a failed deployment doesn't leave the org with the schedule stopped -->
+        <antcall target="optimize-for-release" />
+    </target>
+    
+    <target name="subdeploy" description="Subtarget for avoiding fail-on-error">
+        <!-- stop jobs, deploy (a failure by either of these returns out of subant) -->
+        <executeAnonymous username="${de.username}" password="${de.password}" serverurl="${de.serverurl}">for (SObject j : [SELECT Id FROM CronTrigger]) System.abortJob(j.Id);</executeAnonymous>
+        <sf:deploy username="${de.username}" password="${de.password}" serverurl="${de.serverurl}" deployRoot="src" />
+    </target>
+
+    <target name="package" description="Deploys all components to packaging org">
+        <!-- prompt user to confirm this is the right time to tag -->
+        <echo message="#############################################" />
+        <input message="ARE YOU SURE TO DEPLOY TO THE PACKAGING ORG?" addproperty="tag.confirm" validargs="ok" />
+        
+        <antcall target="optimize-for-release" />
+        <executeAnonymous username="${services.username}" password="${services.password}" serverurl="${services.serverurl}">for (SObject j : [SELECT Id FROM CronTrigger]) System.abortJob(j.Id);</executeAnonymous>
+        <sf:deploy
+            username="${services.username}"
+            password="${services.password}"
+            serverurl="${services.serverurl}"
+            deployRoot="src"
+        />
+        <executeAnonymous username="${services.username}" password="${services.password}" serverurl="${services.serverurl}">
+            new PostInstallHandler().onInstall(null);
+            ConfigureController.settings(UserInfo.getUserId());
+            ConfigureController.permissions(UserInfo.getUserId());
+            ConfigureController.defaults(UserInfo.getSessionId());
+            ConfigureController.reinstallSchedule();
+        </executeAnonymous>
+        
+        <echo message="#############################################" />
+        <input message="MAKE SURE TO CHOOSE 'PostInstallInstructions' WHEN UPLOADING PACKAGE" addproperty="tag.postinstall" validargs="gotit" />
+    </target>
+    
+    <target name="optimize-for-devorg" description="Removes namespace and management artifacts prior to unmanaged deploy.">
+        <replace file="src/package.xml" encoding="UTF-8">
+            <replacetoken><![CDATA[
+    <fullName>Services</fullName>
+    <apiAccessLevel>Unrestricted</apiAccessLevel>
+    <namespacePrefix>Services</namespacePrefix>
+    <postInstallClass>PostInstallHandler</postInstallClass>
+    <setupWeblink>Configure</setupWeblink>
+    <types>]]></replacetoken>
+            <replacevalue><![CDATA[
+    <fullName>Services</fullName>
+    <packageType>UNMANAGED</packageType>
+    <setupWeblink>Configure</setupWeblink>
+    <types>]]></replacevalue>
+        </replace>
+        <replace file="src/package.xml" encoding="UTF-8">
+            <replacetoken><![CDATA[
+    </types>
+    <uninstallClass>PostUninstallHandler</uninstallClass>
+    <version>36.0</version>]]></replacetoken>
+            <replacevalue><![CDATA[
+    </types>
+    <version>36.0</version>]]></replacevalue>
+        </replace>
+    </target>
+
+    <target name="optimize-for-release" description="Restores namespace and management artifacts following unmanaged deploy.">
+        <replace file="src/package.xml" encoding="UTF-8">
+            <replacetoken><![CDATA[
+    <fullName>Services</fullName>
+    <packageType>UNMANAGED</packageType>
+    <setupWeblink>Configure</setupWeblink>
+    <types>]]></replacetoken>
+            <replacevalue><![CDATA[
+    <fullName>Services</fullName>
+    <apiAccessLevel>Unrestricted</apiAccessLevel>
+    <namespacePrefix>Services</namespacePrefix>
+    <postInstallClass>PostInstallHandler</postInstallClass>
+    <setupWeblink>Configure</setupWeblink>
+    <types>]]></replacevalue>
+        </replace>
+        <replace file="src/package.xml" encoding="UTF-8">
+            <replacetoken><![CDATA[
+    </types>
+    <version>36.0</version>]]></replacetoken>
+            <replacevalue><![CDATA[
+    </types>
+    <uninstallClass>PostUninstallHandler</uninstallClass>
+    <version>36.0</version>]]></replacevalue>
+        </replace>
+    </target>
+
+    <target name="zip" description="Compresses misc zipped static resources">
+        <delete file="src/staticresources/ContextSensitiveHelpZip.resource" />
+        <zip destfile="src/staticresources/ContextSensitiveHelpZip.resource" basedir="dev/resource/ContextSensitiveHelpZip" />
+    </target>
+
+    <!--
+     ! MANUAL PURGE STEPS
+     ! Social Accounts and Contacts Settings > Disable
+     !-->
+    <target name="purge" description="Purges an organization of most customizations and components">
+        <!-- prompt user to confirm this is the right time to tag -->
+        <echo message="#############################################" />
+        <input message="This will purge your dev org. ARE YOU SURE?" addproperty="tag.confirm" validargs="yes" />
+        
+        <!-- clean up any previous purge -->
+        <delete dir="purge" />
+        <mkdir dir="purge" />
+        
+        <!-- stop jobs and unassign permission sets -->
+        <executeAnonymous username="${de.username}" password="${de.password}" serverurl="${de.serverurl}">for (SObject j : [SELECT Id FROM CronTrigger]) System.abortJob(j.Id);</executeAnonymous>
+        <executeAnonymous username="${de.username}" password="${de.password}" serverurl="${de.serverurl}">delete [SELECT Id FROM PermissionSetAssignment WHERE PermissionSet.IsOwnedByProfile = false];</executeAnonymous>
+        
+        <!-- delete Escalation Rules which lack package support -->
+        <echo file="purge/package.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata"><types><members>*</members><name>EscalationRules</name></types></Package>]]></echo>
+        <touch file="purge/EscalationRules.txt" />
+        <sf:listMetadata metadataType="EscalationRule" resultFilePath="purge/EscalationRules.txt" username="${de.username}" password="${de.password}" serverurl="${de.serverurl}" apiVersion="36.0" />
+        <replaceregexp file="purge/EscalationRules.txt" flags="sg" match="\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*[^*]+FullName/Id: ([^/]+)/[^*]+\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*" replace="&lt;members&gt;\1&lt;/members&gt;" />
+        <loadfile property="EscalationRules" srcFile="purge/EscalationRules.txt" />
+        <echo file="purge/destructiveChanges.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata">]]></echo>
+        <echo file="purge/destructiveChanges.xml" append="true"><![CDATA[<types><name>EscalationRule</name>]]></echo>
+        <echo file="purge/destructiveChanges.xml" append="true" message="${EscalationRules}" />
+        <echo file="purge/destructiveChanges.xml" append="true"><![CDATA[</types>]]></echo>
+        <echo file="purge/destructiveChanges.xml" append="true"><![CDATA[</Package>]]></echo>
+        <echo file="purge/package.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata"><version>36.0</version></Package>]]></echo>
+        <sf:deploy username="${de.username}" password="${de.password}" serverurl="${de.serverurl}" deployRoot="purge" purgeOnDelete="true" maxPoll="1000" pollWaitMillis="10000" />
+        <delete file="purge/package.xml" />
+        <delete file="purge/destructiveChanges.xml" />
+        
+        <!-- delete Assignment Rules which lack package support -->
+        <echo file="purge/package.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata"><types><members>*</members><name>AssignmentRule</name></types></Package>]]></echo>
+        <touch file="purge/AssignmentRule.txt" />
+        <sf:listMetadata metadataType="AssignmentRule" resultFilePath="purge/AssignmentRule.txt" username="${de.username}" password="${de.password}" serverurl="${de.serverurl}" apiVersion="36.0" />
+        <replaceregexp file="purge/AssignmentRule.txt" flags="sg" match="\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*[^*]+FullName/Id: ([^/]+)/[^*]+\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*" replace="&lt;members&gt;\1&lt;/members&gt;" />
+        <loadfile property="AssignmentRule" srcFile="purge/AssignmentRule.txt" />
+        <echo file="purge/destructiveChanges.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata">]]></echo>
+        <echo file="purge/destructiveChanges.xml" append="true"><![CDATA[<types><name>AssignmentRule</name>]]></echo>
+        <echo file="purge/destructiveChanges.xml" append="true" message="${AssignmentRule}" />
+        <echo file="purge/destructiveChanges.xml" append="true"><![CDATA[</types>]]></echo>
+        <echo file="purge/destructiveChanges.xml" append="true"><![CDATA[</Package>]]></echo>
+        <echo file="purge/package.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata"><version>36.0</version></Package>]]></echo>
+        <sf:deploy username="${de.username}" password="${de.password}" serverurl="${de.serverurl}" deployRoot="purge" purgeOnDelete="true" maxPoll="1000" pollWaitMillis="10000" />
+        <delete file="purge/package.xml" />
+        <delete file="purge/destructiveChanges.xml" />
+        
+        <!-- prepare a wildcard package definition with as many metadata types as possible -->
+        <!-- <sf:describeMetadata username="${de.username}" password="${de.password}" serverurl="${de.serverurl}" apiVersion="36.0" resultFilePath="purge/DescribeMetadata.txt" /> -->
+        <echo file="purge/package.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+            <Package xmlns="http://soap.sforce.com/2006/04/metadata">]]>
+        </echo>
+
+        <echo file="purge/package.xml" append="true"><![CDATA[
+            <!--<types><members>*</members><name>InstalledPackage</name></types>--><!-- cannot be a component in a managed or unmanaged package. -->
+            <types><members>*</members><name>CustomLabels</name></types>
+            <types><members>*</members><name>CustomLabel</name></types>
+            <types><members>*</members><name>StaticResource</name></types>
+            <types><members>*</members><name>Scontrol</name></types>
+            <types><members>*</members><name>ApexComponent</name></types>
+            <types><members>*</members><name>ApexPage</name></types>
+            <types><members>*</members><name>Queue</name></types>
+            <types><members>*</members><name>ExternalDataSource</name></types>
+            <!--<types><members>*</members><name>Role</name></types>--><!-- Your attempt to delete the role CEO could not be completed because users are currently assigned to that role or at least one role reports to that role.: -->
+            <!--<types><members>*</members><name>Group</name></types>--><!-- These guys seem to stick around in the package GUI with an underscore name -->
+            <!--<types><members>*</members><name>UiPlugin</name></types>--><!-- UiPlugin cannot be a component in a managed or unmanaged package. Remove UiPlugin from package.xml to deploy unpackaged components. -->
+            <types><members>*</members><name>BusinessProcess</name></types>
+            <types><members>*</members><name>CompactLayout</name></types>
+            <types><members>*</members><name>RecordType</name></types>
+            <types><members>*</members><name>WebLink</name></types>
+            <types><members>*</members><name>ValidationRule</name></types>
+            <types><members>*</members><name>SharingReason</name></types>
+            <types><members>*</members><name>ListView</name></types>
+            <types><members>*</members><name>FieldSet</name></types>
+            <types><members>*</members><name>ReportType</name></types>
+            <types><members>*</members><name>Report</name></types><!-- (FOLDER) -->
+            <types><members>*</members><name>Dashboard</name></types><!-- (FOLDER) -->
+            <types><members>*</members><name>AnalyticSnapshot</name></types>
+            <types><members>*</members><name>Layout</name></types>
+            <types><members>*</members><name>CustomPageWebLink</name></types>
+            <types><members>*</members><name>QuickAction</name></types><!-- Unable to retrieve file for id 09Dj0000000jat0 of type QuickAction due to an internal error:1089382661-92881 (1808168794) --><!-- http://salesforce.stackexchange.com/a/42296/320 -->
+            <types><members>*</members><name>FlexiPage</name></types>
+            <types><members>*</members><name>CustomTab</name></types>
+            <types><members>*</members><name>CustomApplicationComponent</name></types>
+            <types><members>*</members><name>CustomApplication</name></types>
+            <types><members>*</members><name>Letterhead</name></types>
+            <types><members>*</members><name>Flow</name></types>
+            <types><members>*</members><name>Workflow</name></types>
+            <types><members>*</members><name>WorkflowFieldUpdate</name></types>
+            <types><members>*</members><name>WorkflowKnowledgePublish</name></types>
+            <types><members>*</members><name>WorkflowTask</name></types>
+            <types><members>*</members><name>WorkflowAlert</name></types>
+            <types><members>*</members><name>WorkflowSend</name></types>
+            <types><members>*</members><name>WorkflowOutboundMessage</name></types>
+            <types><members>*</members><name>WorkflowRule</name></types>
+            <!--<types><members>*</members><name>AssignmentRules</name></types>--><!-- Not in package.xml -->
+            <!--<types><members>*</members><name>AssignmentRule</name></types>--><!-- AssignmentRule cannot be a component in a managed or unmanaged package. Remove AssignmentRule from package.xml to deploy unpackaged components. -->
+            <types><members>*</members><name>AutoResponseRules</name></types>
+            <!--<types><members>*</members><name>AutoResponseRule</name></types>--><!-- AutoResponseRule cannot be a component in a managed or unmanaged package. Remove AutoResponseRule from package.xml to deploy unpackaged components. -->
+            <!--<types><members>*</members><name>EscalationRules</name></types>--><!-- Not in package.xml -->
+            <!--<types><members>*</members><name>EscalationRule</name></types>--><!-- EscalationRule cannot be a component in a managed or unmanaged package. Remove EscalationRule from package.xml to deploy unpackaged components. -->
+            <!--<types><members>*</members><name>ApprovalProcess</name></types>--><!-- ApprovalProcess cannot be a component in a managed or unmanaged package. Remove ApprovalProcess from package.xml to deploy unpackaged components. -->
+            <types><members>*</members><name>HomePageComponent</name></types>
+            <types><members>*</members><name>HomePageLayout</name></types>
+            <types><members>*</members><name>CustomObjectTranslation</name></types>
+            <types><members>*</members><name>ApexClass</name></types>
+            <types><members>*</members><name>ApexTrigger</name></types>
+            <types><members>*</members><name>Profile</name></types>
+            <types><members>*</members><name>PermissionSet</name></types>
+            <types><members>*</members><name>DataCategoryGroup</name></types>
+            <types><members>*</members><name>RemoteSiteSetting</name></types>
+            <types><members>*</members><name>AuthProvider</name></types>
+            <!--<types><members>*</members><name>CustomSite</name></types>--><!-- CustomSite cannot be a component in a managed or unmanaged package. Remove CustomSite from package.xml to deploy unpackaged components. -->
+            <!--<types><members>*</members><name>LeadSharingRules</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>LeadOwnerSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>LeadCriteriaBasedSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>CampaignSharingRules</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>CampaignOwnerSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>CampaignCriteriaBasedSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>CaseSharingRules</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>CaseOwnerSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>CaseCriteriaBasedSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>ContactSharingRules</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>ContactOwnerSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>ContactCriteriaBasedSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>OpportunitySharingRules</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>OpportunityOwnerSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>OpportunityCriteriaBasedSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>AccountSharingRules</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>AccountOwnerSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>AccountCriteriaBasedSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>UserSharingRules</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>UserMembershipSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <!--<types><members>*</members><name>UserCriteriaBasedSharingRule</name></types>--><!-- Not available for deploy for this API version -->
+            <types><members>*</members><name>CustomObjectSharingRules</name></types>
+            <types><members>*</members><name>CustomObjectOwnerSharingRule</name></types>
+            <types><members>*</members><name>CustomObjectCriteriaBasedSharingRule</name></types>
+            <types><members>*</members><name>SharingSet</name></types>
+            <!--<types><members>*</members><name>Community</name></types>--><!-- Community cannot be a component in a managed or unmanaged package. Remove Community from package.xml to deploy unpackaged components. -->
+            <types><members>*</members><name>CallCenter</name></types>
+            <types><members>*</members><name>ConnectedApp</name></types>
+            <types><members>*</members><name>CustomPermission</name></types>
+            <!--<types><members>*</members><name>SiteDotCom</name></types>--><!-- SiteDotCom cannot be a component in a managed or unmanaged package. Remove SiteDotCom from package.xml to deploy unpackaged components. -->
+            <!--<types><members>*</members><name>SamlSsoConfig</name></types>--><!-- Your login attempt using single sign-on with an identity provider certificate has failed. Please contact your salesforce.com administrator for more information. -->
+            <!--<types><members>*</members><name>SynonymDictionary</name></types>--><!-- SynonymDictionary cannot be a component in a managed or unmanaged package. Remove SynonymDictionary from package.xml to deploy unpackaged components. -->
+            <types><members>*</members><name>XOrgHub</name></types>
+            <types><members>*</members><name>Settings</name></types>]]>
+        </echo>
+        
+        <!-- Custom Fields lack wildcard support -->
+        <echo file="purge/package.xml" append="true"><![CDATA[<types><name>CustomField</name>]]></echo>
+        <touch file="purge/CustomField.txt" />
+        <sf:listMetadata metadataType="CustomField" resultFilePath="purge/CustomField.txt" username="${de.username}" password="${de.password}" serverurl="${de.serverurl}" apiVersion="36.0" />
+        <replaceregexp file="purge/CustomField.txt" flags="sg" match="\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*[^*]+FullName/Id: ([^/]+__c)/[^*]+\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*" replace="&lt;members&gt;\1&lt;/members&gt;" />
+        <loadfile property="CustomField" srcFile="purge/CustomField.txt" />
+        <echo file="purge/package.xml" append="true" message="${CustomField}" />
+        <echo file="purge/package.xml" append="true"><![CDATA[</types>]]></echo>
+        
+        <!-- Custom Objects lack wildcard support -->
+        <echo file="purge/package.xml" append="true"><![CDATA[<types><name>CustomObject</name>]]></echo>
+        <touch file="purge/CustomObject.txt" />
+        <sf:listMetadata metadataType="CustomObject" resultFilePath="purge/CustomObject.txt" username="${de.username}" password="${de.password}" serverurl="${de.serverurl}" apiVersion="36.0" />
+        <replaceregexp file="purge/CustomObject.txt" flags="sg" match="\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*[^*]+FullName/Id: ([^/]+__c)/[^*]+\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*" replace="&lt;members&gt;\1&lt;/members&gt;" />
+        <replaceregexp file="purge/CustomObject.txt" flags="sg" match="\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*[^*]+FullName/Id: ([^/]+)/[^*]+\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*" replace="" />
+        <loadfile property="CustomObject" srcFile="purge/CustomObject.txt" />
+        <echo file="purge/package.xml" append="true" message="${CustomObject}" />
+        <echo file="purge/package.xml" append="true"><![CDATA[</types>]]></echo>
+        
+        <!-- Documents lack wildcard support -->
+        <echo file="purge/package.xml" append="true"><![CDATA[<types><name>Document</name>]]></echo>
+        <touch file="purge/Document.txt" />
+        <sf:listMetadata metadataType="Document" folder="Services" resultFilePath="purge/Document.txt" username="${de.username}" password="${de.password}" serverurl="${de.serverurl}" apiVersion="36.0" />
+        <replaceregexp file="purge/Document.txt" flags="sg" match="\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*[^*]+FullName/Id: (Services/[^/]+)/[^*]+\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*" replace="&lt;members&gt;\1&lt;/members&gt;" />
+        <loadfile property="Document" srcFile="purge/Document.txt" />
+        <echo file="purge/package.xml" append="true" message="${Document}" />
+        <echo file="purge/package.xml" append="true"><![CDATA[</types>]]></echo>
+        
+        <echo file="purge/package.xml" append="true"><![CDATA[
+            </Package>]]>
+        </echo>
+
+        <!-- retrieve a wildcard package definition -->
+        <sf:retrieve
+            username="${de.username}"
+            password="${de.password}"
+            serverurl="${de.serverurl}"
+            retrieveTarget="purge"
+            unpackaged="purge/package.xml"
+            maxPoll="1000"
+            pollWaitMillis="10000"
+        />
+        
+        <!-- leave Radian6 stuff intact -->
+        <delete file="purge/workflows/SocialPersona.workflow" />
+        <delete file="purge/workflows/SocialPost.workflow" />
+        
+        <!-- leave Community Answers intact -->
+        <delete file="purge/workflows/Question.workflow" />
+        <delete file="purge/workflows/Reply.workflow" />
+        
+        <!-- leave Relative Time Alarms intact -->
+        <delete file="purge/workflows/ExternalEventMapping.workflow" />
+        
+        <!-- leave FeedItem layout intact (Error: Layout must have at least 1 section) -->
+        <delete file="purge/layouts/FeedItem-Feed Item Layout.layout" />
+        
+        <!-- leave Standard Applications intact -->
+        <delete><fileset dir="purge/applications" includes="standard__*" /></delete>
+        <delete file="purge/applications/Force_com.app" /><!-- Unable to delete custom app. Profiles are using this custom app as default.: Service Cloud -->
+        
+        <!-- break Custom Link dependencies -->
+        <mkdir dir="purge/layouts" />
+        <replaceregexp flags="sg">
+            <fileset dir="purge/layouts" />
+            <regexp pattern="&lt;layoutColumns&gt;\s+&lt;layoutItems&gt;\s+&lt;customLink&gt;[^&lt;]+&lt;/customLink&gt;\s+&lt;/layoutItems&gt;\s+&lt;/layoutColumns&gt;\s+" />
+            <substitution expression="&lt;layoutColumns/&gt;"/>
+        </replaceregexp>
+        
+        <!-- break formula dependencies -->
+        <mkdir dir="purge/objects" />
+        <replaceregexp flags="sg">
+            <fileset dir="purge/objects" />
+            <regexp pattern="&lt;formula&gt;[^&lt;]+&lt;/formula&gt;" />
+            <substitution expression="&lt;formula&gt;null&lt;/formula&gt;"/>
+        </replaceregexp>
+        
+        <!-- deploy dependency breaks -->
+        <sf:deploy
+            username="${de.username}"
+            password="${de.password}"
+            serverurl="${de.serverurl}"
+            deployRoot="purge"
+            purgeOnDelete="true"
+            maxPoll="1000"
+            pollWaitMillis="10000"
+        />
+        
+        <!-- leave Standard Layouts intact -->
+        <delete file="purge/layouts/Idea-Idea Layout.layout" />
+        <delete file="purge/layouts/CampaignMember-Campaign Member Page Layout.layout" />
+        <delete file="purge/layouts/Solution-Solution Layout.layout" />
+        <delete file="purge/layouts/Campaign-Campaign Layout.layout" />
+        <delete file="purge/layouts/WorkFeedbackRequest-Feedback Request Layout.layout" />
+        <delete file="purge/layouts/Pricebook2-Price Book Layout.layout" />
+        <delete file="purge/layouts/Event-Event Layout.layout" />
+        <delete file="purge/layouts/OpportunityLineItem-Opportunity Product Layout.layout" />
+        <delete file="purge/layouts/DandBCompany-D%26B Company Layout.layout" />
+        <delete file="purge/layouts/Global-Global Layout.layout" />
+        <delete file="purge/layouts/WorkPerformanceCycle-Performance Cycle Layout.layout" />
+        <delete file="purge/layouts/Contract-Contract Layout.layout" />
+        <delete file="purge/layouts/Contact-Contact Layout.layout" />
+        <delete file="purge/layouts/Product2-Product Layout.layout" />
+        <delete file="purge/layouts/Lead-Lead Layout.layout" />
+        <delete file="purge/layouts/Account-Account Layout.layout" />
+        <delete file="purge/layouts/WorkFeedbackQuestionSet-Feedback Question Set Layout.layout" />
+        <delete file="purge/layouts/Opportunity-Opportunity Layout.layout" />
+        <delete file="purge/layouts/User-User Layout.layout" />
+        <delete file="purge/layouts/WorkCoaching-Coaching Layout.layout" />
+        <delete file="purge/layouts/Case-Case Layout.layout" />
+        <delete file="purge/layouts/WorkFeedbackQuestion-Feedback Question Layout.layout" />
+        <delete file="purge/layouts/Task-Task Layout.layout" />
+        <delete file="purge/layouts/Asset-Asset Layout.layout" />
+        <delete file="purge/layouts/WorkFeedback-Feedback Layout.layout" />
+        <delete file="purge/layouts/Macro-Macro Layout.layout" />
+        <delete file="purge/layouts/DuplicateRecordSet-Duplicate Record Set Layout.layout" />
+        <delete file="purge/layouts/ContentVersion-General.layout" />
+        <delete file="purge/layouts/ContentVersion-Content Version Layout.layout" />
+        <delete file="purge/layouts/WorkFeedbackTemplate-Feedback Template Layout.layout" />
+        <delete file="purge/layouts/Goal-Goal Layout.layout" />
+        <delete file="purge/layouts/GoalLink-Goal Link Layout.layout" />
+        <delete file="purge/layouts/SOSSession-SOS Session Layout.layout" />
+        <delete file="purge/layouts/Metric-Metric Layout.layout" />
+        <delete file="purge/layouts/MetricDataLink-Metric Data Link Layout.layout" />
+        
+        <!-- Partner Enterprise Edition trial contains these objects -->
+        <delete file="purge/layouts/SignupRequest-Signup Request Layout.layout" />
+        <delete file="purge/layouts/WorkReward-Reward Layout.layout" />
+        <delete file="purge/layouts/WorkThanks-Thanks Layout.layout" />
+        <delete file="purge/layouts/WorkRewardFund-Reward Fund Layout 2%2E0.layout" />
+        <delete file="purge/layouts/WorkRewardFundType-Reward Fund Type Layout.layout" />
+        <delete file="purge/layouts/WorkBadgeDefinition-Badge Definition Layout.layout" />
+        <delete file="purge/layouts/WorkBadge-Badge Received Layout 192.layout" />
+        
+        <!-- Allow survival of SiteTemplate.page so we can still purge orgs that have a Site -->
+        <delete file="purge/pages/SiteTemplate.page" />
+        <delete file="purge/pages/SiteTemplate.page-meta.xml" />
+        
+        <!-- name the wildcard package definition -->
+        <replace file="purge/package.xml">
+            <replacetoken><![CDATA[</version>]]></replacetoken>
+            <replacevalue><![CDATA[</version><fullName>purge</fullName>]]></replacevalue>
+        </replace>
+        
+        <!-- re-deploy the now-named wildcard package definition -->
+        <sf:deploy
+            username="${de.username}"
+            password="${de.password}"
+            serverurl="${de.serverurl}"
+            deployRoot="purge"
+            purgeOnDelete="true"
+            maxPoll="1000"
+            pollWaitMillis="10000"
+        />
+        
+        <!-- re-retrieve the wildcard package definition to fully qualify it -->
+        <sf:retrieve
+            username="${de.username}"
+            password="${de.password}"
+            serverurl="${de.serverurl}"
+            retrieveTarget="purge"
+            packageNames="purge"
+            maxPoll="1000"
+            pollWaitMillis="10000"
+        />
+        
+        <!-- leave last Activity view intact (Activity.MyActivities) Error: cannot delete last filter -->
+        <replace file="purge/package.xml" token="&lt;members&gt;Activity.AllActivities&lt;/members&gt;" value="" />
+        <replaceregexp file="purge/objects/Activity.object" flags="s" match="&lt;listViews&gt;.+AllActivities.+&lt;/listViews&gt;" replace="" />
+        
+        <!-- convert package.xml into destructiveChanges.xml and trash local components -->
+        <delete includeEmptyDirs="true" dir="purge" includes="**/*" excludes="*.xml" />
+        <move tofile="purge/destructiveChanges.xml" file="purge/package.xml" />
+        <echo file="purge/package.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata"><version>36.0</version></Package>]]></echo>
+        
+        <!-- perform the deletion -->
+        <sf:deploy
+            username="${de.username}"
+            password="${de.password}"
+            serverurl="${de.serverurl}"
+            deployRoot="purge"
+            purgeOnDelete="true"
+            maxPoll="1000"
+            pollWaitMillis="10000"
+        />
+        
+        <!-- Tidy up after ourselves -->
+        <delete dir="purge" />
+    </target>
+
+    <!-- Very annoying, see https://success.salesforce.com/ideaView?id=08730000000XqgoAAC -->
+    <target name="alphabetize-searchlayouts" description="Normalizes standard button exclusions in custom object XML">
+        <replace dir="src/objects">
+            <replacetoken><![CDATA[
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>Accept</excludedStandardButtons>]]></replacetoken>
+            <replacevalue><![CDATA[
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>]]></replacevalue>
+        </replace>
+        <replace dir="src/objects">
+            <replacetoken><![CDATA[
+        <excludedStandardButtons>New</excludedStandardButtons>
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>]]></replacetoken>
+            <replacevalue><![CDATA[
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>New</excludedStandardButtons>]]></replacevalue>
+        </replace>
+        <replace dir="src/objects">
+            <replacetoken><![CDATA[
+        <excludedStandardButtons>New</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>Accept</excludedStandardButtons>]]></replacetoken>
+            <replacevalue><![CDATA[
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>New</excludedStandardButtons>]]></replacevalue>
+        </replace>
+        <replace dir="src/objects">
+            <replacetoken><![CDATA[
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>New</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>]]></replacetoken>
+            <replacevalue><![CDATA[
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>New</excludedStandardButtons>]]></replacevalue>
+        </replace>
+        <replace dir="src/objects">
+            <replacetoken><![CDATA[
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>New</excludedStandardButtons>
+        <excludedStandardButtons>Accept</excludedStandardButtons>]]></replacetoken>
+            <replacevalue><![CDATA[
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>New</excludedStandardButtons>]]></replacevalue>
+        </replace>
+        <replace dir="src/objects">
+            <replacetoken><![CDATA[
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>New</excludedStandardButtons>]]></replacetoken>
+            <replacevalue><![CDATA[
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>New</excludedStandardButtons>]]></replacevalue>
+        </replace>
+    </target>
+
+    <target name="usage">
+        <java classname="org.apache.tools.ant.Main">
+            <arg value="-projecthelp"/>
+            <arg value="-quiet"/>
+        </java>
+    </target>
+    
+    <macrodef name="executeAnonymous" description="Invoke ExecuteAnonymous using Salesforce Tooling API">
+        <attribute name="username" description="Salesforce user name."/>
+        <attribute name="password" description="Salesforce password."/>
+        <attribute name="serverurl" description="Salesforce endpoint."/>
+        <text name="apexcode"/>
+        <sequential>
+            <!-- Login to populate serverUrl / sessionId / instance -->
+            <login username="@{username}" password="@{password}" serverurl="@{serverurl}" />
+            
+            <!-- Execute using HTTP GET -->
+            <ml:http url="${instance}/services/data/v36.0/tooling/executeAnonymous" method="GET" outfile="lib/executeAnonymousResult.json"  statusProperty="loginResponseStatus">
+                <headers>
+                    <header name="Authorization" value="Bearer ${sessionId}"/>
+                </headers>
+                <query>
+                    <parameter name="anonymousBody" value="@{apexcode}"/>
+                </query>
+            </ml:http>
+            
+            <!-- Fail on error -->
+            <loadfile property="executeAnonymousResult" srcFile="lib/executeAnonymousResult.json" />
+            <fail message="Execute Anonymous failed: ${executeAnonymousResult}">
+                <condition>
+                    <resourcecontains resource="lib/executeAnonymousResult.json" substring="&quot;success&quot;:false" />
+                </condition>
+            </fail>
+            
+            <!-- Show output -->
+            <echo message="${executeAnonymousResult}" />
+        </sequential>
+    </macrodef>
+    
+    <macrodef name="login" description="Login to salesforce and populate serverUrl / sessionId / instance">
+        <attribute name="username" description="Salesforce user name."/>
+        <attribute name="password" description="Salesforce password."/>    
+        <attribute name="serverurl" description="Salesforce endpoint."/>    
+        <sequential>
+            <!-- Obtain Session Id via Login SOAP service -->
+            <ml:http url="@{serverurl}/services/Soap/c/36.0" method="POST" failonunexpected="false" outfile="lib/loginResult.xml" statusProperty="loginResponseStatus">
+                <headers>
+                    <header name="Content-Type" value="text/xml"/>
+                    <header name="SOAPAction" value="login"/>
+                </headers>
+                <entity><![CDATA[
+                    <env:Envelope xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:env='http://schemas.xmlsoap.org/soap/envelope/'>
+                        <env:Body>
+                            <sf:login xmlns:sf='urn:enterprise.soap.sforce.com'>
+                                <sf:username>@{username}</sf:username>
+                                <sf:password>@{password}</sf:password>
+                            </sf:login>
+                        </env:Body>
+                    </env:Envelope>]]>
+                </entity>
+            </ml:http>
+            
+            <!-- Fail on error -->
+            <loadfile property="loginResult" srcFile="lib/loginResult.xml" />
+            <fail message="Login failed: ${loginResult}">
+                <condition>
+                    <resourcecontains resource="lib/loginResult.xml" substring="faultcode" />
+                </condition>
+            </fail>
+            
+            <!-- Parse response into properties -->
+            <xmlproperty file="lib/loginResult.xml" />
+            <echo file="lib/serverUrl.txt" message="${soapenv:Envelope.soapenv:Body.loginResponse.result.serverUrl}" />
+            <echo file="lib/sessionId.txt" message="${soapenv:Envelope.soapenv:Body.loginResponse.result.sessionId}" />
+            <echo file="lib/instance.txt" message="${soapenv:Envelope.soapenv:Body.loginResponse.result.serverUrl}" />
+            <replaceregexp file="lib/instance.txt" match="(https://[^/]+)/.*" replace="\1" />
+            <loadfile property="sessionId" srcFile="lib/sessionId.txt" />
+            <loadfile property="instance" srcFile="lib/instance.txt" />
+        </sequential>
+    </macrodef>
+
+</project>

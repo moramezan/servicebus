@@ -1,0 +1,31 @@
+<h1>
+    Killing unprocessed messages
+</h1>
+
+<p>
+    Problematic messages should not annoy the user forever, they can 'kill' them to move them out of view.
+    <br />However we don't allow users to delete messages lightly, as this would affect auditing and replay.
+</p>
+
+<h2>
+    Procedure
+</h2>
+
+<ol>
+    <li>Create a new Sequence 'KillTest' containing an <em>unconfigured</em> 'Branch' step in position 1.</li>
+    <li>Click <strong>Enqueue Test Event</strong> to process a message, which should fail.</li>
+    <li>Wait for the monitor to graph the 'Exception' message for 'Branch'.</li>
+    
+    <li>From the Messages tab, go to the 'Exception' listview.</li>
+    <li>Select the checkbox next to the message and click <strong>Kill</strong>.</li>
+</ol>
+
+<h2>
+    Outcomes
+</h2>
+
+<ol>
+    <li>No messages should be visible in the 'Exception' listview.</li>
+    <li>Exactly one message should be visible in the 'Killed' listview.</li>
+    <li>The message status should be 'Completed' with some stack trace in 'Cause' field and some error in 'Exception' field.</li>
+</ol>

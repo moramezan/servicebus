@@ -1,0 +1,138 @@
+<apex:page title="Message: {!$CurrentPage.Parameters.mid}" setup="true" standardController="Message__c" extensions="MessageViewExtension" action="{!doInit}">
+    
+    <apex:pageMessages showDetail="true" />
+    
+    <script>
+        (function() {
+            if (!document.getElementsByClassName) return;
+            var lis = document.getElementsByClassName('wt-Message');
+            if (!lis.length) return;
+            lis[0].className += ' zen-active primaryPalette';
+            var a = lis[0].children[0];
+            if (!a) return;
+            a.className += ' brandPrimaryFgr';
+        }());
+    </script>
+    
+    <script>
+        window.$RemoteAction = window.$RemoteAction || {};
+        $RemoteAction.MessageViewExtension = $RemoteAction.MessageViewExtension || {};
+        $RemoteAction.MessageViewExtension.handleRestart = '{!$RemoteAction.MessageViewExtension.handleRestart}';
+    </script>
+    
+    <apex:sectionHeader title="{!$ObjectType.Message__c.Label}" subtitle="{!message.Name}" help="{!URLFOR($Page.MessageSplash)}" />
+    
+    <apex:includeScript value="{!URLFOR('/soap/ajax/36.0/connection.js')}" />
+    <apex:includeScript value="{!URLFOR('/soap/ajax/36.0/apex.js')}" />
+    
+    <apex:form rendered="{!$CurrentPage.Parameters.mid != null}" id="form">
+        <apex:pageBlock mode="maindetail" title="Message Detail">
+            
+            <apex:pageBlockButtons location="top">
+                <apex:commandButton action="{!URLFOR($Action.Message__c.Edit, $CurrentPage.Parameters.mid, ['retURL'=$CurrentPage.URL])}" rendered="{!$ObjectType.Message__c.Updateable && Message.Status__c != 'Completed'}" value="Edit" />
+                <apex:dynamicComponent componentValue="{!Restart}" rendered="{!Message.Exception__c != null || Message.Status__c == 'Paused'}" />
+            </apex:pageBlockButtons>
+            
+            <apex:pageBlockSection columns="1" collapsible="false" showHeader="false">
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Message__c.Fields.Name.Label}" />
+                    <apex:outputField value="{!Message.Name}" />
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Message__c.Fields.Status__c.Label}" />
+                    <apex:outputField value="{!Message.Status__c}" />
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Message__c.Fields.Route__c.Label}" />
+                    <apex:outputPanel >
+                        {!Message.Route__c}
+                        <apex:outputText rendered="{!Definition != null}">
+                            (<a href="{!URLFOR($Page.ApexClassView, null, ['id'=Definition.Id])}">{!Definition.Label}</a>)
+                        </apex:outputText>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Message__c.Fields.ExecuteDuration__c.Label}" />
+                    <apex:outputField value="{!Message.ExecuteDuration__c}" />
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Message__c.Fields.Exception__c.Label}" />
+                    <apex:outputField value="{!Message.Exception__c}" />
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Message__c.Fields.Cause__c.Label}" />
+                    <apex:outputField value="{!Message.Cause__c}" />
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem dataStyleClass="pre">
+                    <apex:outputLabel value="{!$ObjectType.Message__c.Fields.Event__c.Label}" />
+                    <apex:outputField value="{!Message.Event__c}" />
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Message__c.Fields.JobId__c.Label}" />
+                    <apex:outputField value="{!Message.JobId__c}" />
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Previous Step" />
+                    <apex:outputLink value="{!URLFOR($Page.MessageView, null, ['mid'=Message.ParentId__c])}">{!Message.ParentId__c}</apex:outputLink>
+                </apex:pageBlockSectionItem>
+                
+            </apex:pageBlockSection>
+            
+        </apex:pageBlock>
+
+        <apex:pageBlock mode="detail" title="Next Step">
+            <apex:pageBlockTable rendered="{!Children.Empty}" value="{!Children}" var="child" captionClass="left">
+                <apex:facet name="caption">
+                    No records to display
+                </apex:facet>
+            </apex:pageBlockTable>
+            
+            <apex:pageBlockTable rendered="{!NOT(Children.Empty)}" value="{!Children}" var="child">
+                <apex:column headerValue="{!$ObjectType.Message__c.Fields.Name.Label}">
+                    <apex:outputLink value="{!URLFOR($Page.MessageView, null, ['mid'=child.Id])}">{!child.Name}</apex:outputLink>
+                </apex:column>
+                
+                <apex:column headerValue="{!$ObjectType.Message__c.Fields.CreatedDate.Label}">
+                    <apex:outputField value="{!child.CreatedDate}" />
+                </apex:column>
+                
+                <apex:column headerValue="{!$ObjectType.Message__c.Fields.Status__c.Label}">
+                    <apex:outputField value="{!child.Status__c}" />
+                </apex:column>
+                
+                <apex:column headerValue="{!$ObjectType.Message__c.Fields.Route__c.Label}">
+                    <apex:outputField value="{!child.Route__c}" />
+                </apex:column>
+                
+                <apex:column headerValue="{!$ObjectType.Message__c.Fields.ExecuteDuration__c.Label}" headerClass="right" styleClass="right">
+                    <apex:outputField value="{!child.ExecuteDuration__c}" />
+                </apex:column>
+                
+                <apex:column headerValue="{!$ObjectType.Message__c.Fields.Exception__c.Label}">
+                    <apex:outputField value="{!child.Exception__c}" />
+                </apex:column>
+                
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+        
+        
+    </apex:form>
+    
+    <apex:detail rendered="{!Id != null}" />
+    
+    <style>
+        .pre {white-space: pre-wrap; font-family: monospace;}
+        .left {text-align: left;}
+        .right {text-align: right;}
+    </style>
+    
+</apex:page>

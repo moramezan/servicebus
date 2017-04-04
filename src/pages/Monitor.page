@@ -1,0 +1,96 @@
+<apex:page setup="true" tabStyle="Monitor__tab" sidebar="false" controller="MonitorController" title="Monitor" readOnly="true">
+    
+    <script>
+        (function() {
+            if (!document.getElementsByClassName) return;
+            var lis = document.getElementsByClassName('wt-Monitor');
+            if (!lis.length) return;
+            lis[0].className += ' zen-active primaryPalette';
+            var a = lis[0].children[0];
+            if (!a) return;
+            a.className += ' brandPrimaryFgr';
+        }());
+    </script>
+    
+    <apex:pageMessages showDetail="true" />
+    
+    <apex:sectionHeader title="Monitor" description="The message queue monitor shows system activity at a glance. Green areas are queued events, red areas are events with exceptions."  help="{!URLFOR($Page.MonitorSplash)}" />
+    
+    <!-- #769 -->
+    <input checked="checked" type="checkbox" id="realtime" onclick="if(this.checked){var that=this;this.disabled = true;setTimeout(function() {that.checked=false;that.disabled=false;}, 60000);}" />
+    <script>setTimeout(function() {document.getElementById('realtime').checked=false;}, 60000);</script>
+    <label for="realtime" title="Redraw every second for 60 seconds">Realtime</label>
+    
+    <!-- #803 -->
+    <img id="JobStatus" src="{!URLFOR('/s.gif')}" style="position:relative;top:4px;left:8px;" title="Broker is running" />
+    
+    <apex:chart data="{!null}" width="100%" height="500" name="Stats">
+        <apex:legend position="right" />
+        <apex:axis type="Category" position="bottom" title="Route" fields="Route">
+            <apex:chartLabel rotate="270" />
+        </apex:axis>
+        <apex:axis type="Numeric" position="left" fields="Paused,Queued,Started,Exceptions">
+            <apex:chartLabel />
+        </apex:axis>
+        <apex:barSeries colorSet="#C00" orientation="vertical" axis="left" xField="Route" yField="Exceptions" title="Exception" />
+        <apex:areaSeries colorSet="#00F,#999,#3C3,#CC3,#33C"
+            opacity="0.6"
+            axis="left"
+            xField="Route"
+            yField="Jobs,Paused,Queued,Started"
+            title="Jobs,Paused,Queued,Started"
+        />
+    </apex:chart>
+    
+    <script>
+        (function redrawStatistics() {
+            //realtime checkbox empty, look again soon
+            var checkbox = document.getElementById('realtime'); //#769
+            if (!checkbox.checked) return setTimeout(redrawStatistics, 1000);
+            
+            //realtime checkbox full, draw every ~1 second
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.MonitorController.fetchStatistics}', //fetchTestStatistics
+                function(data) {
+                    {!JSENCODE($Setup.Application__c.PrefixDot__c)}Stats.reload(data); //#782 stored xss
+                    setTimeout(redrawStatistics, 1000);
+                    
+                    var job = data[0].Job;
+                    var jobStatus = document.getElementById('JobStatus');
+                    if (!job.length) {
+                        jobStatus.src = "{!URLFOR('/img/newStar.png')}";
+                        jobStatus.title = '';
+                    } else if (job[0].Status == 'Holding') {
+                        jobStatus.src = "{!URLFOR('/img/loading.gif')}";
+                        jobStatus.title = 'Holding';
+                    } else if (job[0].Status == 'Queued') {
+                        jobStatus.src = "{!URLFOR('/img/loading.gif')}";
+                        jobStatus.title = 'Queued';
+                    } else if (job[0].Status == 'Preparing') {
+                        jobStatus.src = "{!URLFOR('/img/loading.gif')}";
+                        jobStatus.title = 'Preparing';
+                    } else if (job[0].Status == 'Processing') {
+                        jobStatus.src = "{!URLFOR('/img/loading.gif')}";
+                        jobStatus.title = 'Processing';
+                    } else if (job[0].Status == 'Aborted') {
+                        jobStatus.src = "{!URLFOR('/s.gif')}";
+                        jobStatus.title = 'All messages processed';
+                    }
+                }
+            );
+        }());
+    
+        (function() {
+            //background draw every 15 seconds
+            setInterval(function() {
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.MonitorController.fetchStatistics}',
+                    function(data) {
+                        {!JSENCODE($Setup.Application__c.PrefixDot__c)}Stats.reload(data); //#782 stored xss
+                    }
+                );
+            }, 15000);
+        }());
+    </script>
+    
+</apex:page>

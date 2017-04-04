@@ -1,0 +1,143 @@
+{
+    "type": "Ext.container.Container",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "container|align": "stretch",
+        "designer|userAlias": "buttons",
+        "designer|userClassName": "Buttons",
+        "height": null,
+        "layout": "hbox",
+        "margin": null,
+        "width": null
+    },
+    "name": "MyContainer",
+    "configAlternates": {
+        "scrollable": "boolean"
+    },
+    "designerId": "480d533d-4068-47ba-871e-0ec965d4c536",
+    "viewControllerInstanceId": "a303fb2f-97fc-4fe6-99c0-47b9d29bca63",
+    "viewModelInstanceId": "ae83cb8d-1acb-4a07-ae00-5d0831f7c483",
+    "cn": [
+        {
+            "type": "Ext.button.Button",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "itemId": "inject",
+                "layout|flex": null,
+                "margin": "0 10px 0 0",
+                "text": "Enqueue Test Event"
+            },
+            "name": "MyButton1",
+            "configAlternates": {
+                "scrollable": "boolean"
+            },
+            "designerId": "e4e82dd0-f7a3-4cca-bd1e-08b7a7fec65a",
+            "cn": [
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "button",
+                            "e"
+                        ],
+                        "fn": "handler",
+                        "implHandler": [
+                            "function handler(response, event) {",
+                            "    if (event.status) {",
+                            "        //success",
+                            "        var jobId = response[0];",
+                            "        var messageId = response[1];",
+                            "        var link = Ext.DomHelper.createHtml({",
+                            "            'tag': 'a',",
+                            "            'html': jobId.substring(0, 15),",
+                            "            'title': 'View Message',",
+                            "            'href': URLFOR[$Page.MessageView].replace('000000000000000AAA', messageId)",
+                            "        });",
+                            "",
+                            "        Ext.Msg.alert(",
+                            "            'Success',",
+                            "            'Test message has been enqueued. <br />Submitted Job Id: ' + link",
+                            "        ).setIcon(Ext.Msg.QUESTION);",
+                            "        button.enable();",
+                            "        //button.unmask(); //too dark since #818",
+                            "    } else {",
+                            "        //failure",
+                            "        Ext.Msg.alert(",
+                            "            'Error enqueueing test message',",
+                            "            event.message",
+                            "        ).setIcon(Ext.Msg.ERROR);",
+                            "    }",
+                            "}",
+                            "",
+                            "button.disable();",
+                            "//button.mask(); //too dark since #818",
+                            "",
+                            "Visualforce.remoting.Manager.invokeAction(",
+                            "    $RemoteAction.SequenceEditExtension.enqueue,",
+                            "    Id,",
+                            "    handler",
+                            ");"
+                        ]
+                    },
+                    "name": "handler",
+                    "designerId": "e2aa1d21-1e6a-4386-a95a-394554baddd3"
+                }
+            ]
+        },
+        {
+            "type": "Ext.button.Button",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "itemId": "newStep",
+                "layout|flex": null,
+                "layout|margins": null,
+                "margin": "0 10px 0 0",
+                "text": "New Step"
+            },
+            "name": "MyButton",
+            "configAlternates": {
+                "scrollable": "boolean"
+            },
+            "designerId": "76666a75-e111-40e4-b5e3-5fcd1583e383",
+            "cn": [
+                {
+                    "type": "Ext.menu.Menu",
+                    "reference": {
+                        "name": "menu",
+                        "type": "object"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|displayName": "Tags",
+                        "ignoreParentClicks": true,
+                        "plain": true,
+                        "showSeparator": false,
+                        "width": null
+                    },
+                    "name": "MyMenu",
+                    "configAlternates": {
+                        "scrollable": "boolean"
+                    },
+                    "designerId": "a3f73739-03bc-4399-94a6-56a0703397b0"
+                }
+            ]
+        }
+    ]
+}

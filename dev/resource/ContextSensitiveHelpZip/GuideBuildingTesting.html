@@ -1,0 +1,598 @@
+<h1>
+    Building and Testing a Service
+</h1>
+
+<p>
+    <fieldset>
+        <strong>
+            Create a new global class in a development org. Confirm that the class
+            follows the expected Service template as set out below. You can then build
+            appropriate unit tests as required by Salesforce.
+        </strong>
+    </fieldset>
+
+</p>
+
+
+
+<h2>
+    Anatomy of a Service
+</h2>
+
+
+<p>
+    Start by creating a empty class called  <code>ChatterService</code>. Next, paste the code
+    listed in <strong>Listing 1</strong>  into the newly created class
+    and press Save.
+    <br/>
+    This service represents the  minimum
+    layout required for recognition by the Services Package.
+    Although the service has no side effects and performs no useful work, it will be listed
+    alongside other services in the Services tab of the Services package.
+</p>
+
+
+<p  align="right">
+    <strong>Listing 1</strong>
+</p>
+<pre>
+global class ChatterService extends Abstract.Service {
+
+    global class Definition extends Abstract.Service.Definition {
+        String Description = '';
+    }
+
+    global override  List&lt;Map&lt;String,Object&gt;&gt;  execute(Map&lt;String,Object&gt; event) {
+        // input
+        // ...
+
+        // action
+        // ...
+
+        // output
+        return new List&lt;Map&lt;String,Object&gt;&gt;{event};
+    }
+}
+</pre>
+
+
+
+
+<p>
+<fieldset>
+    <legend>Notes - Listing 1 </legend>
+    <ul>
+        <li /><strong>001 - 001 </strong> a Service is a standard Apex class.
+        Services do not take a direct dependency on the Service  package
+        and instead extend <code>Service</code>.
+        All methods and classes  must be scoped with the global keyword.
+        </li>
+        <li /><strong>003 - 016 </strong> a valid Service has two key elements, namely a <code>Definition</code>
+        inner class and an <code>execute()</code> method.
+        </li>
+        <li /><strong>003 - 005</strong> the <code>Definition</code> inner class exposes important attributes thereby
+        facilitating correct integration into the Services Package.
+        </li>
+        <li /><strong>004 - 004</strong> the <code>Description</code> property inside the <code>Definition</code>
+        signals that this class is a Service.
+        Properties are case sensitive.
+        </li>
+        <li /><strong>007 - 016</strong> the <code>execute()</code> method exlemplifies the execution pattern set
+        out in the OASIS specification :
+        <code>Event[] execute(Event)</code>
+        </li>
+        <li /><strong>008 - 009</strong> inputs - attributes to support the work of the service are extracted
+        from the input event
+        </li>
+        <li /><strong>011 - 012</strong> action - the specified activity or work of the service occurs here
+        </li>
+        <li /><strong>014 - 015</strong> output(s) - zero, one or many events are teturned as a collection
+        </li>
+    </ul>
+</fieldset>
+
+    <br/> <br/> <br/>
+</p>
+
+
+
+
+
+<h1>
+    Tutorial - Building  the Chatter Service
+</h1>
+
+
+<p>
+    The  <a href="?topic=ApiServiceDefinition">Service Definition</a> API formally documents the creation of a service.
+    In this guide, we will take a more casual approach
+    to understanding the construction and testing of a service.
+
+    We will use the <code>Debug</code> service as our inspiration. Instead of sending a message to a
+    specified user's email account, our service (<code>ChatterService</code>) will instead send the message to the user's
+    chatter feed.
+</p>
+
+
+<p>
+<br/>
+</p>
+
+
+<h2>
+    Service Specification
+</h2>
+
+<p>
+    The Services Package has a built-in <em>Debug</em> service that surfaces the parameters of the
+    input event via an email. The email is sent to either:
+    <ol>
+        <li>
+            the inbox of the running context user (default behavior), or
+        </li>
+        <li>
+            the inbox of a nominated user as defined by a custom setting associated with the
+            <em>Debug</em> service
+        </li>
+    </ol>
+</p>
+
+<p>
+    This <em>Chatter</em> service will replicate the <em>Debug</em> functionality. But as an alternative to
+    surfacing the event parameters in the form of an email, the <em>Chatter</em> service will instead post
+    these event parameters to a user's Chatter Feed.
+
+    <ol>
+        <li>
+            The activity has no side effects on processing, therefore return the untouched inbound event
+             as the only item inside the  output events collection.
+        </li>
+        <li>
+            Surface the the inbound event details to the  Chatter feed of the following user:
+            <br/><br/>
+            <ul>
+                <li>
+                    the specific user as defined by the <code>UserId</code> field of the <code>ChatterServiceConfig</code>
+                    custom setting.
+                </li>
+                <li>
+                    If no <code>UserId</code> has been entered in the <code>ChatterServiceConfig</code> custom setting,
+                    use the <code>Id</code> of the running user context
+                </li>
+            </ul>
+        </li>
+    </ol>
+</p>
+
+
+<p>
+    <br/>
+</p>
+
+<h2>
+    Build Instructions
+</h2>
+
+
+
+<ol>
+
+
+
+    <li>
+        <p>
+            Confirm that chatter is enabled for your org. If necessary, click Setup &gt;  Chatter &gt; Settings and check Enable.
+        </p>
+
+        <p><img src="resources/GuideBuildingTesting/Enable-Chatter.png" /></p>
+    </li>
+
+    <li>
+        <p>
+            Create the custom setting (<code>ChatterServiceConfig</code>) to hold the <em>Chatter</em> configuration and
+            add a custom setting field to hold the <code>UserId</code> of the chatter feed.
+        </p>
+
+        <p>
+            <img src="resources/GuideBuildingTesting/ChatterServiceConfig.png" />
+        </p>
+
+        <p>  <br/> </p>
+    </li>
+
+    <li>
+        <p>Next, update the  service definition from Listing 1 with appropriate meta attributes
+            in accordance with the
+            <a href="https://github.com/bigassforce/OASIS" target="_blank">OASIS</a>
+            specification</p>
+
+        <p  align="right">
+            <strong>Listing 2</strong>
+        </p>
+<pre>
+global class ChatterService extends Abstract.Service {
+
+    global class Definition extends Abstract.Service.Definition {
+        String Description = 'Chatters a message.';
+        String Tag = 'Services';
+        String Label = 'Chatter';
+        String ServiceConfig = ChatterServiceConfig__c.class.getName();
+        String Icon = 'feed';
+        Integer Chunks = 5;
+        String Cardinality = 'One';
+    }
+
+    global override  List&lt;Map&lt;String,Object&gt;&gt;  execute(Map&lt;String,Object&gt; event) {
+        // input
+        // ...
+
+        // action
+        // ...
+
+        // output
+        return new List&lt;Map&lt;String,Object&gt;&gt;{event};
+    }
+}
+</pre>
+
+
+
+
+    <p>
+    <fieldset>
+        <legend>Notes - Listing 2 </legend>
+        <ul>
+            <li><strong>004 - 004 </strong> Description   -
+                                            is used by the Services Package to
+                                            describe the service in a user friendly way.
+            </li>
+            <li><strong>005 - 005 </strong> Tag           -
+                                            is used by the Services Package to
+                                            group related services together on the sequence builder.
+            </li>
+            <li><strong>006 - 006 </strong> Label         -
+                                            is used by the Services Package to
+                                            label the service in a user friendly way.
+            </li>
+            <li><strong>007 - 007 </strong> ServiceConfig -
+                                            is used by the Services Package to
+                                            display an appropriate services congiguration link next to
+                                            the service on the services tab.
+                                            Simerally, the StepConfig property
+                                            is used by the Services Package to
+                                            display an appropriate step congiguration link next to
+                                            the step on the sequences tab.
+            </li>
+            <li><strong>008 - 008 </strong> Icon          -
+                                            is used by the Services Package to
+                                            display an appropriate icon next to the service or step.
+                                            Available icons can be found <a href="http://www.famfamfam.com/lab/icons/silk/previews/index_abc.png">here</a>
+            </li>
+            <li><strong>009 - 009 </strong> Chunks        -
+                                            is used by the Services Package to
+                                            define the number of times this service can run in one execution context.
+                                            For our example a service issuing 2 SOQL queries could run only 100 times.
+                                            A value of 5 should be more than sufficient for our purposes.
+            </li>
+            <li><strong>010 - 010 </strong> Cardinality   -
+                                            is used by the Services Package to
+                                            indicate of the ratio of output events to input events on the
+                                            sequence builder.
+                                            For our example, the event injected into the the service is forwarded out of
+                                            the service  unchanged in the outputs collection
+                                            so the value of 'One' is appropriate.
+            </li>
+        </ul>
+    </fieldset>
+
+    </p>
+
+    <p>  <br/> </p>
+    </li>
+
+
+
+    <li>
+
+        <p>Under the inputs section of the execute method,
+            extract appropriate event attributes to facilitate correct processing by the service</p>
+
+        <p  align="right">
+            <strong>Listing 3</strong>
+        </p>
+<pre>
+global class ChatterService extends Abstract.Service {
+
+    global class Definition extends Abstract.Service.Definition {
+        String Description = 'Chatters a message.';
+        String Tag = 'Services';
+        String Label = 'Chatter';
+        String ServiceConfig = ChatterServiceConfig__c.class.getName();
+        String Icon = 'feed';
+        Integer Chunks = 5;
+        String Cardinality = 'One';
+    }
+
+    global override  List&lt;Map&lt;String,Object&gt;&gt;  execute(Map&lt;String,Object&gt; event) {
+        // input
+        Id defaultUserId  = (Id)event.get('EnqueueUserId');
+        ChatterServiceConfig__c ChatterServiceConfig = ChatterServiceConfig__c.getOrgDefaults();
+        Id userId = ChatterServiceConfig.UserId__c;
+        if (userId == null) {
+            userId = defaultUserId;
+        }
+
+        // action
+        // ...
+
+        // output
+        return new List&lt;Map&lt;String,Object&gt;&gt;{event};
+    }
+}
+</pre>
+
+        <p>
+        <fieldset>
+            <legend>Notes - Listing 3</legend>
+            <ul>
+                <li><strong>015 - 015 </strong> The service runs under a default user context which may or not be
+                    the context of the enqueueing user. The Id of the enqueueing user is still available as an
+                    attribute of the service input event and we will use this User Id as the default to chatter to.
+                </li>
+                <li><strong>016 - 017 </strong> Has the Id of the user to chatter to been setup?
+                </li>
+            </ul>
+        </fieldset>
+        </p>
+        <p>  <br/> </p>
+    </li>
+
+
+
+    <li>
+        <p>Finally , add the actual business logic of the service under the action section.</p>
+
+        <p  align="right">
+            <strong>Listing 4</strong>
+        </p>
+<pre>
+global class ChatterService extends Abstract.Service {
+
+    global class Definition extends Abstract.Service.Definition {
+        String Description = 'Chatters a message.';
+        String Tag = 'Services';
+        String Label = 'Chatter';
+        String ServiceConfig = ChatterServiceConfig__c.class.getName();
+        String Icon = 'feed';
+        Integer Chunks = 5;
+        String Cardinality = 'One';
+    }
+
+    global override  List&lt;Map&lt;String,Object&gt;&gt;  execute(Map&lt;String,Object&gt; event) {
+        // input
+        Id defaultUserId  = (Id)event.get('EnqueueUserId');
+        ChatterServiceConfig__c ChatterServiceConfig = ChatterServiceConfig__c.getOrgDefaults();
+        Id userId = ChatterServiceConfig.UserId__c;
+        if (userId == null) {
+            userId = defaultUserId;
+        }
+
+        // action
+        FeedItem feedItem = new FeedItem(
+            ParentId = userId,
+            Body =  json.serializePretty(event)
+        );
+        insert feedItem;
+
+        // output
+        return new List&lt;Map&lt;String,Object&gt;&gt;{event};
+    }
+}
+</pre>
+
+        <p>
+        <fieldset>
+            <legend>Notes - Listing 4</legend>
+            <ul>
+                <li><strong>023 - 027 </strong> The business activity of the service takes place under the action.
+                                                In our example, the service  chatters the event to the configured
+                                                chatter user or if the configuration has not been setup, the
+                                                enqueueing user. <!-- /// TODO Handling versus Throwing -->
+                </li>
+            </ul>
+        </fieldset>
+        </p>
+        <p>  <br/> </p>
+    </li>
+</ol>
+
+
+
+<h2>
+    Unit Test the Service
+</h2>
+<blockquote style="margin-left:1.5em;">
+    <p>
+        Unit Test the service. Tests will normally cover:
+    <ul>
+        <li>the expected Definition (for example, the Description)</li>
+        <li>the expected initial state (for example, the Custom settings supporting the service)</li>
+        <li>that expected exceptions are thrown for invalid 1initial state</li>
+        <li>the expected outputs (for example, the event count of the  output event collection</li>
+        <li>the expected side effects (for example, the insertion of certain records such as a FeedItem</li>
+    </ul>
+    </p>
+    Most services will exhibit a set of tests similar to those shown below in Listing 5.
+    <p  align="right">
+        <strong>Listing 5</strong>
+    </p>
+<pre>
+@IsTest
+private class ChatterServiceTest {
+
+    static testmethod void callingExecuteWithoutConfigCreatesExpected() {
+        // Arrange
+        Id userId  = UserInfo.getUserId();
+
+        Map&lt;String,Object&gt; inputEvent = new Map&lt;String,Object&gt; {
+            'EnqueueUserId' => userId,
+            'c:YourKey' => 'your data'
+        };
+
+        Integer actualFeedItemsBeforeSize = [SELECT Id, Body FROM FeedItem].Size();
+
+        // Act
+        ChatterService service = new ChatterService();
+        List&lt;Map&lt;String,Object&gt;&gt; outputEvents = service.handle(inputEvent);
+
+        // Assemble
+        Integer actualEventSize = outputEvents.size();
+        Integer actualFeedItemsAfterSize = [SELECT Id, Body FROM FeedItem].Size();
+        Integer actualFeedSize = actualFeedItemsAfterSize - actualFeedItemsBeforeSize;
+
+        // Assert
+        Integer expectedEventSize = 1;
+        Integer expectedFeedSize = 1;
+        System.assertEquals(expectedEventSize, actualEventSize);
+        System.assertEquals(expectedFeedSize, actualFeedSize);
+    }
+
+    static testmethod void callingExecuteWithConfigCreatesExpected() {
+        // Arrange
+        Id userId  = UserInfo.getUserId();
+        insert new ChatterServiceConfig__c (
+            UserId__c = userId
+        );
+
+        Map&lt;String,Object&gt; inputEvent = new Map&lt;String,Object&gt; {
+            'c:YourKey' => 'your data'
+        };
+
+        Integer actualFeedItemsBeforeSize = [SELECT Id, Body FROM FeedItem].Size();
+
+        // Act
+        ChatterService service = new ChatterService();
+        List&lt;Map&lt;String,Object&gt;&gt; outputEvents = service.handle(inputEvent);
+
+        // Assemble
+        Integer actualEventSize = outputEvents.size();
+        Integer actualFeedItemsAfterSize = [SELECT Id, Body FROM FeedItem].Size();
+        Integer actualFeedSize = actualFeedItemsAfterSize - actualFeedItemsBeforeSize;
+
+        // Assert
+        Integer expectedEventSize = 1;
+        Integer expectedFeedSize = 1;
+        System.assertEquals(expectedEventSize, actualEventSize);
+        System.assertEquals(expectedFeedSize, actualFeedSize);
+    }
+}
+</pre>
+
+  <p>
+    <fieldset>
+<legend>Note: </legend>
+    Refer to lines <strong>017</strong> and <strong>046</strong>.
+    <br/>
+    During unit tests, do not call the  <code>execute()</code> or <code>callout() </code> methods
+    of the service directly.
+    Instead, call the <code>handle()</code> method - for further details, contact the services package authors.
+
+    </fieldset>
+
+  </p>
+    <p>  <br/> </p>
+</blockquote>
+
+
+
+
+
+
+
+<h2>
+    Visually Test the Service
+</h2>
+<ol>
+    <li>
+        <p>
+            Run the service as a one shot WITHOUT configuring a chatter user. Navigate to the services tab
+            and click on the <code>ChatterService</code>.
+        </p>
+
+        <p><img src="resources/GuideBuildingTesting/Chatter-Enqueue.png" /></p>
+
+        <p>
+            From the detail screen, press the Enqueue Test event Button.
+            You  will be presented with a confirmation message indicating that your event was dispatched.
+        </p>
+
+        <p><img src="resources/GuideBuildingTesting/Enqueue-Test-JobId-Message.png" /></p>
+
+
+        <p>
+            Next navigate to your chatter feed  which should now contain the details of your dispatched event.
+        </p>
+
+        <p><img src="resources/GuideBuildingTesting/Event-On-Chatter-Feed.png" /></p>
+    </li>
+
+    <li>
+        <p>
+            Run the service as a one shot AFTER configuring a chatter user for the service.
+            Navigate to the services tab
+            and click on the Config link to configure the service.
+        </p>
+
+        <p><img src="resources/GuideBuildingTesting/ChatterService-Configure.png" /></p>
+
+        <p>
+            Manage the custom setting at an org level by
+            entering a User Id that that is different from  your own User Id and press Save.
+        </p>
+
+        <p><img src="resources/GuideBuildingTesting/Manage-ChatterServiceConfig.png" /></p>
+
+
+        <p>
+            From the  services tab, click on the <code>ChatterService</code>.
+        </p>
+
+        <p><img src="resources/GuideBuildingTesting/Chatter-Enqueue.png" /></p>
+
+        <p>
+            From the detail screen, press the Enqueue Test event Button.
+            You  will be presented with a confirmation message indicating that your event was dispatched.
+        </p>
+
+        <p><img src="resources/GuideBuildingTesting/Enqueue-Test-JobId-Message.png" /></p>
+
+
+        <p>
+            Verify that the chatter feed for the User  configured on the <code>ChatterService</code>
+            contains the details of your dispatched event.
+        </p>
+    </li>
+
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

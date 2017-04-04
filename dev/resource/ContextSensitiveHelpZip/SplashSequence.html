@@ -1,0 +1,45 @@
+<h1>
+    Sequences
+</h1>
+
+<h2>
+    <img class="right" src="resources/Splashes/Sequence.png" />
+    What is a sequence?
+</h2>
+
+<p>
+    A sequence is an arrangement of processing tasks called steps.
+    Events enter the top of the sequence and flow through the steps in order.
+    The sequence has a name (eg 'Generate Calls') which indicates the kind of work its steps perform.
+</p>
+
+<p>
+    Steps are arranged using the drag and drop builder.
+    The last step of every sequence is a terminate service.
+    This swallows events that reach the end of the sequence.
+</p>
+
+<h2>
+    How to enqueue events to a sequence?
+</h2>
+
+<p>
+    <code>
+        event = new Map&lt;String,Object&gt;();
+        <br />
+        event.put('ToSequence', 'MySequenceName');
+        <br />
+        Services.Enqueue.invoke(event);
+    </code>
+</p>
+
+<h2>
+    When to use sequences?
+</h2>
+
+<ul>
+    <li>To arrange services in order declaratively.</li>
+    <li>When business logic consists of multiple services.</li>
+    <li>For splitting and then aggregating collections of events.</li>
+    <li>When services need to communicate between each other.</li>
+</ul>

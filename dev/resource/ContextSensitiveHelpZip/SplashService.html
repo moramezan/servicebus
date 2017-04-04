@@ -1,0 +1,50 @@
+<h1>
+    Services
+</h1>
+
+<h3>
+    <img class="right" src="resources/Splashes/Services.png" />
+    What is a service?
+</h3>
+
+<p>
+    A service is a single piece of business logic implemented as an Apex class.
+    Every service handles one event and emits a collection containing zero, one or many new events.
+    Each service class contains a Service Definition that describes its behavior.
+</p>
+
+<h2>
+    How to enqueue events to a service?
+</h2>
+
+<p>
+    <code>
+        event = new Map&lt;String,Object&gt;();
+        <br />
+        event.put('ToService', 'MyServiceName');
+        <br />
+        Services.Enqueue.invoke(event);
+    </code>
+</p>
+
+<h3>
+    How to author custom services?
+</h3>
+
+<pre>
+global class MyService extends Abstract.Service {
+    
+    global class Definition extends Abstract.Service.Definition {
+        String Description = 'Short explanation of the service.';
+    }
+    
+    override public void callout(Map&lt;String,Object&gt; event) {
+        //perform service callouts
+    }
+    
+    override public List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; inputEvent) {
+        //implement service logic
+    }
+    
+}
+</pre>

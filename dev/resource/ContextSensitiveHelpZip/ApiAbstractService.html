@@ -1,0 +1,92 @@
+<h1>
+    <code>Abstract.Service</code>
+</h1>
+
+<p>
+    A service is a single, logical program with inputs and outputs in the form of events.
+    Services are implemented as Apex classes.
+    Each service handles one event, and may output zero, one, or many new events.
+    All the behaviors available to service authors can be availed using a
+    <a href="?topic=ApiServiceDefinition">Service Definition</a>.
+</p>
+
+<p>
+    This example shows a typical service class which you will see throughout tutorials and documentation:
+</p>
+
+<pre>
+global class ExampleService extends Abstract.Service {
+    
+    global class Definition extends Abstract.Service.Definition {
+        String Description = 'Example Service';
+    }
+    
+    override public void callout(Map&lt;String,Object&gt; event) {
+        //perform service callouts
+    }
+    
+    override public List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; inputEvent) {
+        //implement service logic
+    }
+    
+}
+</pre>
+
+<fieldset>
+    <legend>Note</legend>
+    All output event parameters must be JSON serializable, to ensure they can be persisted between execution contexts.
+    <br /><br />
+    The service container writes state to the database before and after service execution. This allows you to recover from errors.
+</fieldset>
+
+<h1>
+    <code>Abstract.Service</code> Methods
+</h1>
+
+<h2>
+    Callout
+</h2>
+
+<p>
+    Optional method for services that perform callouts to external systems.
+</p>
+
+<p>
+    <code>override public void callout(Map&lt;String,Object&gt; inputEvent)</code>
+</p>
+
+<p>
+    Any web services or HTTP callouts must be performed via this method. The response body
+    can be shared with the <code>execute</code> method by using class properties. For example:
+</p>
+
+<pre>
+override public void callout(Map&lt;String,Object&gt; inputEvent) {
+    HttpRequest request = new HttpRequest();
+    request.setEndpoint('https://httpbin.org/headers');
+    request.setMethod('GET');
+    this.Content = new Http().send(request).getBody();
+}
+</pre>
+
+<h2>
+    Execute
+</h2>
+
+<p>
+    Required method that contains the executable logic of a Service.
+</p>
+
+<p>
+    <code>override public List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; event)</code>
+</p>
+
+<p>
+    Any DML operations must be performed via this method. Returns a list of zero, one or many output events.
+</p>
+
+<pre>
+override public List&lt;Map&lt;String,Object&gt;&gt; execute(Map&lt;String,Object&gt; event) {
+    return new List&lt;Map&lt;String,Object&gt;&gt;{event};
+}
+</pre>

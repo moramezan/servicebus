@@ -1,0 +1,159 @@
+<apex:page title="Discover" setup="true" standardController="ApexClass" extensions="ApexClassDiscoverExtension" readOnly="true">
+    
+    <script>
+        (function() {
+            if (!document.getElementsByClassName) return;
+            var lis = document.getElementsByClassName('wt-Services');
+            if (!lis.length) return;
+            lis[0].className += ' zen-active primaryPalette';
+            var a = lis[0].children[0];
+            if (!a) return;
+            a.className += ' brandPrimaryFgr';
+        }());
+    </script>
+    
+    <apex:pageMessages showDetail="true" />
+    
+    <!-- make the loading mask go away -->
+    <style>div.z-mask {background: none !important;}</style>
+    
+    <apex:sectionHeader title="Service Discovery" help="{!URLFOR($Page.ApexClassSplash)}" />
+    
+    <div id="pageBlockId"></div>
+    
+    <apex:variable var="application" value="Progress" /><!-- Application namespace such as MyApp -->
+    <apex:variable var="resource" value="{!$Resource.AsyncApexJobViewZip}" /><!-- The $Resource containing app.js -->
+    <apex:variable var="path" value="" /><!-- Development mode prefixes all resources, production mode loads the Sencha Cmd output -->
+    <apex:variable var="baseCSSPrefix" value="z-" /><!-- Ext.buildSettings.baseCSSPrefix which will be applied before the framework loads -->
+    
+    <!-- BASE CSS PREFIX -->
+    <script>
+        Ext = {buildSettings: {baseCSSPrefix: '{!baseCSSPrefix}'}};
+    </script>
+    
+    <!-- BRIDGING COMPONENTS -->
+    <script>
+        //meat and potatoes
+        window.$Page = window.$Page || {};
+        $Page.ApexClassList = '{!URLFOR($Page.ApexClassList)}';
+        
+        window.$RemoteAction = window.$RemoteAction || {};
+        $RemoteAction.ApexClassDiscoverExtension = $RemoteAction.ApexClassDiscoverExtension || {};
+        $RemoteAction.ApexClassDiscoverExtension.DiscoverDefinitions = '{!$RemoteAction.ApexClassDiscoverExtension.DiscoverDefinitions}';
+        $RemoteAction.ApexClassDiscoverExtension.SaveCache = '{!$RemoteAction.ApexClassDiscoverExtension.SaveCache}';
+        
+        window.ApexClasses = {};
+        window.Namespaces = JSON.parse('{!JSENCODE(Namespaces)}'); //stored xss
+        window.Steps = Namespaces.map(function(item, index, array) {return {Id: index, Name: item};});
+        
+        window.ReadSteps = function(asyncApexJobId, callback) {
+            setTimeout(function() {
+                //delay avoids apeshit refresh
+                callback(Steps, {status: true});
+            }, 100);
+        };
+        
+        window.ReadAsyncApexJobs = function(asyncApexJobId, callback) {
+            setTimeout(function() {
+                //delay avoids apeshit refresh
+                callback([AsyncApexJob], {status: true});
+            }, 100);
+        };
+        
+        //fakery for checkout client repurposing
+        window.$RemoteAction = window.$RemoteAction || {};
+        $RemoteAction.AsyncApexJobViewExtension = $RemoteAction.AsyncApexJobViewExtension || {};
+        $RemoteAction.AsyncApexJobViewExtension.ReadRecords = 'ReadSteps';
+        $RemoteAction.AsyncApexJobViewExtension.ReadAsyncApexJobs = 'ReadAsyncApexJobs';
+        
+        window.retURL = '{!JSENCODE($CurrentPage.Parameters.retURL)}' || '{!URLFOR($Action.Sequence__c.List, $ObjectType.Sequence__c.KeyPrefix)}'; //#782 reflected xss
+        
+        window.AsyncApexJob = window.AsyncApexJob || {};
+        AsyncApexJob.Id = '000000000000000AAA';
+        AsyncApexJob.CompletedDate = null;
+        AsyncApexJob.CreatedDate = new Date('{!NOW()}');
+        AsyncApexJob.ExtendedStatus = null;
+        AsyncApexJob.JobItemsProcessed = 0;
+        AsyncApexJob.JobType = 'BatchApex';
+        AsyncApexJob.LastProcessed = '000000000000000AAA';
+        AsyncApexJob.LastProcessedOffset = 0;
+        AsyncApexJob.NumberOfErrors = 0;
+        AsyncApexJob.Status = 'Processing';
+        AsyncApexJob.TotalJobItems = Namespaces.length;
+        
+        window.Launch = function(callback) {
+            callback();
+        }
+    </script>
+    
+    <!--
+     ! DEVELOPMENT
+     !-->
+    <!-- set path variable -->
+    <apex:outputPanel rendered="{!LEN(path) != 0}" layout="none">
+        <base href="{!path}{!resource}/" />
+        <script src="{!path}{!resource}/bootstrap.js"></script>
+    </apex:outputPanel>
+    <!-- set path variable -->
+    
+    <!--
+     ! PRODUCTION
+     ! see SequenceEditZip/build.xml and ext-baseurl.js
+     ! http://www.sencha.com/forum/showthread.php?290269-CMD-5.0.1.231-production-build-error-Cannot-read-property-baseUrl-of-undefined&p=1064889&viewfull=1#post1064889
+     !-->
+    <!-- unset path variable -->
+    <apex:outputPanel rendered="{!LEN(path) == 0}" layout="none">
+        <script>Ext = window.Ext || {}; Ext.Boot={};</script>
+        <script src="{!URLFOR(resource, '/app.js')}"></script>
+        <link href="{!URLFOR(resource, '/resources/' + application + '-all.css')}" rel="stylesheet" type="text/css" />
+    </apex:outputPanel>
+    <!-- unset path variable -->
+    
+    <script>
+        (function() {
+            var namespaces = Namespaces.slice(0); //clone
+            for (var index in namespaces) if (namespaces.hasOwnProperty(index)) {
+                var namespace = namespaces[index];
+                Visualforce.remoting.Manager.invokeAction(
+                    $RemoteAction.ApexClassDiscoverExtension.DiscoverDefinitions,
+                    namespace,
+                    function (services, event) {
+                        
+                        if (!event.status) {
+                            //failure
+                            return alert('Cannot discover "' + namespace + '": ' + event.message);
+                        }
+                        
+                        //success, accumulate
+                        for (var index in services) ApexClasses[index] = services[index];
+                        AsyncApexJob.JobItemsProcessed++;
+                        namespaces.pop();
+                        Steps.pop();
+                        
+                        //this was the last one
+                        if (!namespaces.length) {
+                            
+                            //write all services into cache
+                            Visualforce.remoting.Manager.invokeAction(
+                                $RemoteAction.ApexClassDiscoverExtension.SaveCache,
+                                JSON.stringify(ApexClasses),
+                                function (documentId, event) {
+                                    if (!event.status) {
+                                        //failure
+                                        return alert('Cannot save cache: ' + event.message);
+                                    }
+                                    
+                                    //success
+                                    AsyncApexJob.Status = 'Completed';
+                                }
+                            );
+                        }
+                    },
+                    {buffer: false}
+                );
+            }
+        }());
+        
+    </script>
+    
+</apex:page>

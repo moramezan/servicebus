@@ -1,0 +1,127 @@
+<h1>
+    Messaging Concepts
+</h1>
+
+<h2>
+    Messages and Events
+</h2>
+
+<p>
+    Events occur all the time. (For example: the clock strikes twelve, the fuel tank reaches empty).
+    To represent details about an event in an electronic system, we use a special object called a
+    message. The primary purpose of a message is to provide a useful mechanism to communicate to a
+    services that a particular event has occurred.
+</p>
+
+<h2>
+    Event Based Architecture
+</h2>
+
+<p>
+    Specific events are only relevant to specific services. For this reason the Services Package
+    routes events to specific services within the system.
+
+    An ordered list of  event types to specific services can be reduced to a
+    table of steps called a (Routing) <code>Sequence</code>.
+
+</p>
+
+<p>
+    Breaking up work into specific services that respond to specific event types is known as
+    Event Driven Architecture (
+    <a href="https://en.wikipedia.org/wiki/Event-driven_architecture" target="_blank">EDA</a>
+    ).
+    The Services Package is a
+    <a href="https://en.wikipedia.org/wiki/Staged_event-driven_architecture" target="_blank">SEDA</a>
+    implementation of this evented architecture.
+</p>
+
+<h2>
+    Command Response Architecture
+</h2>
+
+<p>
+    Most implementations on Salesforce make use of an alternative to EDA called Command-Response
+    Architecture. Under this model, work is centrally directed from a command such as a button
+    click or a trigger action.
+</p>
+
+<p>
+    An obvious drawback of of command-response architecture is that possible execution paths
+    as well as exception handling  and testing requirements grow
+    in an geometric manner as lines of code are added to system.
+</p>
+
+<h2>
+    Services
+</h2>
+
+<p>
+    A service is an apex class designed to execute specific business rules
+    written in a manner that conforms to the
+    <a href="https://github.com/bigassforce/OASIS" target="_blank">OASIS</a>
+    specification.
+</p>
+
+<p>
+    An event received by a service that has
+    previously registered it's interest in an event of that  particular type will
+    cause the service to execute.
+    Developers are responsible for creating services while
+    the responsibility of routing  any given event to the appropriate
+    service is delegated to the services package.
+</p>
+
+<h2>
+    Processing Sequence
+</h2>
+
+<p>
+    The Services Package facilitates useful work on the Salesforce platform via services that have
+    previously registered their collective interest the occurrence of  specific event types.
+    In practise and under SEDA architecture, this normally
+    means that a service registers an interest in events emitted from the service that immediately
+    precedes it.
+
+
+</p>
+
+
+
+<p>
+    A register of interest containing a sufficient number of services will naturally resemble a
+    sequence of chained processing steps. This register is called a <em>Sequence</em> and the
+    sequential processing steps within it are called <em>Steps</em>.
+
+    <fieldset>
+        <legend>Note</legend>
+        In addition to <em>sequential registration </em>,
+        registration of interest in an event via Pub/Sub and topics is also supported.
+    </fieldset>
+</p>
+
+<h2>
+    Summary
+</h2>
+
+<p>
+    The Services Package is built using a SEDA implementation of Event Driven Architecture.
+</p>
+
+<p>
+    The Services Package logically
+    maps processing steps to an underlying business requirements.
+    Emphasis is placed on narrowly defined, composable units of work called Services.
+    Each unit of work responds to
+    the occurrence of a specific event type and is implemented in a Single apex class
+    that conforms to the
+    <a href="https://github.com/bigassforce/OASIS" target="_blank">OASIS</a>
+    specification.
+</p>
+
+<p>
+    The Services Package provides a clean model that limits complexity in the system.
+    In contrast, the Command-Response
+    paradigm attempts to attach all possible logical code paths and associated exception handling to
+    a single specific command. This creates code complexity that is not easily tested or modified.
+</p>

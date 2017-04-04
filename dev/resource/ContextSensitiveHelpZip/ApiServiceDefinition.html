@@ -1,0 +1,106 @@
+<h1>
+    Service Definition
+</h1>
+
+<p>
+    Inside each Apex Service is a Service Definition class.
+    This inner class controls how the service is displayed and how it behaves.
+    <br />
+    The Services Package discovers service definitions automatically.
+    This example shows the bare minimum service definition:
+</p>
+
+<pre>
+global class ExampleService extends Abstract.Service {
+    
+    global class Definition extends Abstract.Service.Definition {
+        String Description = 'Outputs the input event.';
+    }
+    
+}
+</pre>
+
+<h1>
+    Attributes
+</h1>
+
+<dl>
+    <dt>Description</dt>
+    <dd><strong>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></strong></dd>
+    <dd><strong>Required description that explains what the service does.</strong></dd>
+    
+    <dt>Tag</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>Optional grouping tag that can be used to display related services together.</dd>
+    
+    <dt>Icon</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>Optional icon name from the <a href="resources/Api/index_abc.png" target="_blank">Silk library</a> that will display alongside steps of this type.</dd>
+    
+    <dt>Label</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>Optional label to be displayed instead of the apex class name.</dd>
+    
+    <dt>Cardinality</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>
+        Optional indicator of the ratio of output events to input events:
+        <br /><code>Fewer</code> outputs (eg Aggregate)
+        <br /><code>Zero</code> for no outputs (eg Terminate)
+        <br /><code>One</code> for a single output (eg Debug)
+        <br /><code>Many</code> for a split (eg Publish)
+    </dd>
+
+    <dt>HelpUrl</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>Optional link to service documentation. This will be displayed alongside services listed.</dd>
+    
+    <dt>Chunks</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">Integer</a></dd>
+    <dd>
+        Optional number of times this service can run in one execution context.
+        <br />For example a service issuing 2 SOQL queries could run only <code>100</code> times.</dd>
+
+    <dt>StepConfig</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>Optional API name of a Custom Setting to be used for Step-specific configuration.</dd>
+    
+    <dt>ServiceConfig</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>Optional API name of a Custom Setting to be used for Service-specific configuration.</dd>
+    
+    <dt>Inputs</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_map.htm" target="_blank">Map&lt;String,String&gt;</a></dd>
+    <dd>Optional descriptions of the input event parameters required by this service.</dd>
+    
+    <dt>Outputs</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_map.htm" target="_blank">Map&lt;String,String&gt;</a></dd>
+    <dd>Optional descriptions of the output event parameters emitted by this service. Not to be confused with events themselves.</dd>
+</dl>
+
+<p>
+    An example Service Definition showing all attributes:
+</p>
+
+<pre>
+global class Definition extends Abstract.Service.Definition {
+    
+    String Description = 'Distributes leads to different owners.';
+    String Tag = 'Acme';
+    String Icon = 'chart_organisation';
+    String Label = 'Lead Distribute';
+    String Cardinality = 'One';
+    String HelpUrl = Page.LeadDistributeHelp.getUrl();
+    String Chunks = 75; //constrained by DML
+    String StepConfig = LeadDistributeStepConfig__c.class.getName();
+    String ServiceConfig = LeadDistributeServiceConfig__c.class.getName();
+    
+    Map&lt;String,Object&gt; Inputs = new Map&lt;String,Object&gt;{
+        'RecordId' => 'ID of the lead to distribute.'
+    };
+    
+    Map&lt;String,Object&gt; Outputs = new Map&lt;String,Object&gt;{
+        'acme:Strategy' => 'STRING of the distribution strategy.'
+    }
+}
+</pre>

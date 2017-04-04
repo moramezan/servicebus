@@ -1,0 +1,52 @@
+{
+    "type": "Ext.app.Application",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "controllers": [
+            "Application"
+        ],
+        "models": [
+            "AsyncApexJob",
+            "Process"
+        ],
+        "name": "Progress",
+        "requires": [
+            "Progress.override.data.proxy.Direct"
+        ],
+        "stores": [
+            "Processes",
+            "AsyncApexJobs"
+        ],
+        "views": [
+            "Holder"
+        ]
+    },
+    "name": "Application",
+    "designerId": "application",
+    "cn": [
+        {
+            "type": "fixedfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "fn": "launch",
+                "implHandler": [
+                    "Launch(function() {",
+                    "    Ext.create('Progress.view.Holder', {",
+                    "        renderTo: 'pageBlockId'",
+                    "    });",
+                    "});"
+                ]
+            },
+            "name": "launch",
+            "designerId": "858b9dc1-78fb-4a7c-a298-4ee9f647c5c0"
+        }
+    ]
+}

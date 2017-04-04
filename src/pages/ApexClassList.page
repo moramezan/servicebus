@@ -1,0 +1,132 @@
+<!-- this is called "list" cuz a tab would show "recently viewed" etc -->
+<!-- no recordSetVar  as "List controllers are not supported for ApexClass" -->
+<apex:page setup="true" standardController="ApexClass" extensions="ApexClassListExtension" action="{!doRedirect}" title="Services">
+    
+    <script>
+        (function() {
+            if (!document.getElementsByClassName) return;
+            var lis = document.getElementsByClassName('wt-Services');
+            if (!lis.length) return;
+            lis[0].className += ' zen-active primaryPalette';
+            var a = lis[0].children[0];
+            if (!a) return;
+            a.className += ' brandPrimaryFgr';
+        }());
+    </script>
+    
+    <script>
+        function openConfig(configId) {
+            var y = window.screenTop || window.screenY,
+                x = window.screenLeft || window.screenX,
+                top = Math.round(Ext.Element.getViewportHeight() * 0.15) + y,
+                left = Math.round(Ext.Element.getViewportWidth() * 0.1) + x,
+                width = Math.round(Ext.Element.getViewportWidth() * 0.8),
+                height = Math.round(Ext.Element.getViewportHeight() * 0.8)
+            ;
+            Ext.getBody().mask();
+            window.config = window.open(
+                URLFOR[$Page.ApexClassConfig].replace('000000000000000AAA', configId),
+                'config',
+                'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top + ',toolbar=no,status=no,directories=no,menubar=no,resizable=yes'
+            );
+            
+            window.config.focus();
+        }
+    </script>
+    
+    <apex:stylesheet value="{!URLFOR($Resource.SequenceEditZip, '/resources/Builder-all.css')}" />
+    
+    <apex:sectionHeader title="Services" description="A Service is a single, logical apex class with inputs and outputs in the form of events. Services are configured to run as: {!LINKTO(RunAsUser.Name, '/' + RunAsUser.Id, null, ['noredirect'='1'])}" help="{!URLFOR($Page.ApexClassSplash)}" />
+    
+    <apex:pageBlock mode="detail">
+        <apex:pageBlockTable value="{!id2definition}" var="id">
+
+            <apex:column headerValue="Action" width="90" style="color: #999;">
+                <apex:outputLink value="/{!id}" style="color: #015ba7; text-decoration: none;">Apex</apex:outputLink>
+                <apex:outputText rendered="{!id2definition[id].ServiceConfig != null}">&nbsp;|&nbsp;</apex:outputText>
+                <apex:outputLink rendered="{!id2definition[id].ServiceConfig != null}" value="{!URLFOR($Page.ApexClassConfig, null, ['id'=id])}" style="color: #015ba7; text-decoration: none;" title="Manage Service Config" target="_blank" onclick="openConfig('{!id}');return false;">Config</apex:outputLink>
+            </apex:column>
+            
+            <apex:column headerValue="Icon" width="30">
+                <apex:image value="{!URLFOR('/s.gif')}" styleClass="z-action-col-icon {!id2definition[id].Icon}" />
+            </apex:column>
+            
+            <apex:column headerValue="Label">
+                <apex:outputLink value="{!URLFOR($Page.ApexClassView, null, ['id'=id])}">{!id2definition[id].Label}</apex:outputLink>
+            </apex:column>
+            
+            <apex:column headerValue="Namespace Prefix" value="{!id2class[id].NamespacePrefix}" />
+            
+            <apex:column headerValue="{!$ObjectType.ApexClass.Fields.ApiVersion.Label}">
+                <apex:outputField value="{!id2class[id].ApiVersion}" />
+            </apex:column>
+            
+            <apex:column headerValue="{!$ObjectType.ApexClass.Fields.Status.Label}">
+                <apex:outputField value="{!id2class[id].Status}" />
+            </apex:column>
+
+            <apex:column headerValue="{!$ObjectType.ApexClass.Fields.LastModifiedDate.Label}">
+                <apex:outputField value="{!id2class[id].LastModifiedById}" />,&nbsp;
+                <apex:outputField value="{!id2class[id].LastModifiedDate}" />
+            </apex:column>
+            
+            <apex:column headerValue="{!$ObjectType.ApexClass.Fields.IsValid.Label}">
+                <apex:outputField value="{!id2class[id].IsValid}" />
+            </apex:column>
+
+
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+    
+    <apex:variable var="application" value="Builder" /><!-- Application namespace such as MyApp -->
+    <apex:variable var="resource" value="{!$Resource.SequenceEditZip}" /><!-- The $Resource containing app.js -->
+    <apex:variable var="path" value="" /><!-- Development mode prefixes all resources, production mode loads the Sencha Cmd output -->
+    <apex:variable var="baseCSSPrefix" value="z-" /><!-- Ext.buildSettings.baseCSSPrefix which will be applied before the framework loads -->
+    
+    <!-- BASE CSS PREFIX -->
+    <script>Ext = {buildSettings: {baseCSSPrefix: '{!baseCSSPrefix}'}};</script>
+    
+    <!-- BRIDGING COMPONENTS -->
+    <script>
+        //#1295 piggy back sequence builder
+        window.$RemoteAction = window.$RemoteAction || {};
+        $RemoteAction.SequenceEditExtension = $RemoteAction.SequenceEditExtension || {};
+        
+        window.Id = '{!Id}';
+        
+        window.$Page = window.$Page || {};
+        $Page.ApexClassConfig = '{!$Page.ApexClassConfig}';
+        
+        window.URLFOR = window.URLFOR || {};
+        URLFOR[$Page.ApexClassConfig] = '{!URLFOR($Page.ApexClassConfig, null, ["id"="000000000000000AAA"])}';
+    
+        window.Launch = function(callback) {
+            //dont launch
+        };
+    </script>
+    
+    <!-- DEVELOPMENT -->
+    <apex:outputPanel rendered="{!LEN(path) != 0}" layout="none">
+        <base href="{!path}{!resource}/" />
+        <script src="{!path}{!resource}/bootstrap.js"></script>
+    </apex:outputPanel>
+    
+    <!-- PRODUCTION -->
+    <apex:outputPanel rendered="{!LEN(path) == 0}" layout="none">
+        <script>Ext = window.Ext || {}; Ext.Boot={};</script>
+        <script src="{!URLFOR(resource, '/app.js')}"></script>
+        <link href="{!URLFOR(resource, '/resources/' + application + '-all.css')}" rel="stylesheet" type="text/css" />
+    </apex:outputPanel>
+    
+    <script>
+        //#1295 new window
+        Ext.get(window).on('focus', function() {
+            Ext.getBody().unmask();
+            if (window.config && !window.config.closed) {
+                //closes popup if defocussed
+                window.config.close();
+                delete window.config;
+            }
+        });
+    </script>    
+</apex:page>

@@ -1,0 +1,15 @@
+{
+    "type": "Ext.data.Store",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "Steps",
+        "model": "Step",
+        "storeId": "Steps"
+    },
+    "name": "MyStore",
+    "designerId": "c3b6ba4e-5f77-4a60-9b73-0bd9f90467a0"
+}

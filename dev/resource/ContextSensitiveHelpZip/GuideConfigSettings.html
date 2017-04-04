@@ -1,0 +1,97 @@
+<h1>
+    Step Config and Service Settings
+</h1>
+
+<h2>Configuring Service Behavior</h2>
+
+<p>
+    Instead of replicating a large portions of custom logic in a second or third service, a
+    service developer may instead choose to expose variation in execution logic through the use of
+    service attributes.
+</p>
+
+<p>
+    Service attributes can apply to:
+</p>
+
+<ul>
+    <li>the service class as a whole via a global service configuration, or</li>
+    <li>service logic at a specific step by making use of  step configuration.</li>
+</ul>
+
+<h2>
+    Service Configuration (configuration applicable to the service as a whole)
+</h2>
+
+<p>
+    The obvious use case for global service configuration is credential storage by org. So for example,
+    imagine a tweet service that must be configured with one set of credentials for production and another
+    set of credentials for development or the sandbox.
+    The snippet below illustrates how to configure your service globally using a custom setting.
+</p>
+
+<pre>
+    //..
+    global class Definition extends Abstract.Service.Definition {
+        //..
+        String ServiceConfig = YourServiceConfig__c.class.getName();
+        //..
+    }
+
+    global override  List&lt;Map&lt;String,Object&gt;&gt;  execute(Map&lt;String,Object&gt; event) {
+        //..
+        YourServiceConfig__c yourServiceConfig = YourServiceConfig__c.getOrgDefaults();
+        //..
+    }
+    //..
+
+</pre>
+
+
+
+
+
+<h2>
+    Step Config (configuration of the service specific to each step)
+</h2>
+
+<p>
+    The obvious use case for step specific service configuration is variation in logic dempending on where that
+    service is plugged into any given sequence. Imagine a tweet service that  is inserted in
+    a sales sequence. One can imagine a tweet that broadcasts 'Another great just completed'. That same
+    service could also be plugged into a marketing sequence and it would insted be configured
+    to broadcast  'Great deals available' - the same service with step level config variation
+</p>
+
+<p>
+    The snippet below illustrates how to make use of a step specific configuration for your service
+    using a Custom Object.
+</p>
+
+<pre>
+    //..
+    global class Definition extends Abstract.Service.Definition {
+        //..
+        String StepConfig = YourStepConfig__c.class.getName();
+        //..
+    }
+
+    global override  List&lt;Map&lt;String,Object&gt;&gt;  execute(Map&lt;String,Object&gt; event) {
+        //..
+        Id stepConfigId = (Id) event.get('StepConfigId');
+        YourStepConfig__c yourStepConfig__c = [
+            SELECT Name, YourField__c FROM YourStepConfig__c WHERE Id = :stepConfigId
+        ];
+        //..
+    }
+    //..
+</pre>
+
+<p>
+    The snippet below illustrates how to make use of a step specific configuration for your service
+    using a <!-- // TODO List / Hierarchy --> Custom Setting.
+</p>
+
+<pre>
+    // TODO
+</pre>

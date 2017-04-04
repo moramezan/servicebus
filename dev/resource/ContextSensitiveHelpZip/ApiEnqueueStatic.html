@@ -1,0 +1,84 @@
+<h1>
+    Static Enqueue
+</h1>
+
+<h2>
+    Single event invoke
+</h2>
+
+<p>
+    Sends an event with any number of event parameters to a sequence or a service.
+</p>
+
+<p>
+    <code>global Id invoke(Map&lt;String,Object&gt; event)</code>
+</p>
+
+<dl>
+    <dt>event</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_map.htm" target="_blank">Map&lt;String,Object&gt;</a></dd>
+    <dd>An event, which must carry a <code>ToService</code> or <code>ToSequence</code> string parameter.</dd>
+</dl>
+
+<h2>
+    Multiple event invoke
+</h2>
+
+<p>
+    Sends multiple events with any number of event parameters to sequences or services.<br />
+    Use this constructor to bulkify multiple events instead of calling invoke inside of a loop.
+</p>
+
+<p>
+    <code>global Id invoke(List&lt;Map&lt;String,Object&gt;&gt; events)</code>
+</p>
+
+<dl>
+    <dt>events</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_list.htm" target="_blank">List&lt;Map&lt;String,Object&gt;&gt;</a></dd>
+    <dd>A collection of multiple events, each of which must carry a <code>ToService</code> or <code>ToSequence</code> parameter with a string value.</dd>
+</dl>
+
+<h1>
+    Invocable Action
+</h1>
+
+<h2>
+    Process Builder invoke
+</h2>
+
+<p>
+    Lightning Processes can leverage the Services Package to do asynchronous heavy lifting from Process Builder.
+</p>
+
+<p>
+    <code>global Id invoke(List&lt;SimpleEvent&gt; events)</code>
+</p>
+
+<pre>
+    Services.Enqueue.SimpleEvent {
+        String RecordId;
+        String ToService;
+        String ToSequence;
+        String CorrelationUuid;
+    }
+</pre>
+
+<dl>
+    <dt>RecordId</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_id.htm" target="_blank">Id</a></dd>
+    <dd>Indicates which sObject the sequence will operate on.</dd>
+    
+    <dt>ToService</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>Indicates which service the event is destined for.</dd>
+    
+    <dt>ToSequence</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>Indicates which sequence the event is destined for.</dd>
+    
+    <dt>CorrelationUuid</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>Universally unique identifier (v4) which can be used to group everything spawned from any entry point event.</dd>
+
+</dl>

@@ -1,0 +1,177 @@
+<apex:page setup="true" standardController="ApexClass" extensions="ApexClassViewExtension" title="Service: {!ApexClass.Name}" action="{!doInit}">
+    
+    <script>
+        (function() {
+            if (!document.getElementsByClassName) return;
+            var lis = document.getElementsByClassName('wt-Services');
+            if (!lis.length) return;
+            lis[0].className += ' zen-active primaryPalette';
+            var a = lis[0].children[0];
+            if (!a) return;
+            a.className += ' brandPrimaryFgr';
+        }());
+    </script>
+    
+    <apex:stylesheet value="{!URLFOR($Resource.SequenceEditZip, '/resources/Builder-all.css')}" />
+    
+    <apex:pageMessages showDetail="true" />
+    
+    <apex:sectionHeader title="Service" subtitle="{!IF(FullyQualifiedClassName == Definition.Label, FullyQualifiedClassName, Definition.Label)}" help="{!URLFOR($Page.ApexClassSplash)}" />
+
+    <apex:pageBlock mode="maindetail" title="Service Detail" id="pageBlockId">
+        
+        <apex:pageBlockButtons location="top" id="pageBlockButtonsId">
+            
+            <apex:form id="form">
+                <apex:actionStatus id="busy">
+                    <apex:facet name="stop">
+                        <apex:commandButton value="Enqueue Test Event" onclick="enqueue(); return false;">
+                            <apex:actionFunction name="enqueue" reRender="form" action="{!doEnqueue}" status="busy" oncomplete="Ext.Msg.alert('Success', 'Test message has been enqueued. <br />Submitted Job Id: {!LINKTO(JobId, URLFOR($Page.MessageView, null, [mid=MessageId]))}').setIcon(Ext.Msg.QUESTION);" />
+                        </apex:commandButton>
+                    </apex:facet>
+                    <apex:facet name="start">
+                        <apex:commandButton value="Enqueue Test Event" disabled="true" />
+                    </apex:facet>
+                </apex:actionStatus>
+            </apex:form>
+            
+            <!-- #768 indicate messages flowing through sequence -->
+            <apex:form style="display:inline;float:right;" id="busy">
+                <apex:actionPoller action="{!countRoutedMessages}" interval="5" reRender="busy" />
+                <apex:outputText rendered="{!RoutedMessages > 0}" value="{!RoutedMessages}" style="position:relative;top:0px;right:8px;" title="Services are executing" />
+                <apex:image rendered="{!RoutedMessages > 0}" value="{!URLFOR('/img/loading.gif')}" style="position:relative;top:4px;" title="Services are executing" />
+            </apex:form>
+            
+        </apex:pageBlockButtons>
+        
+        
+        <apex:pageBlockSection showHeader="false" collapsible="false" columns="1">
+            <apex:pageBlockSectionItem rendered="{!Definition.Tag != 'Untagged'}">
+                <apex:outputLabel >Tag</apex:outputLabel>
+                <apex:outputText value="{!Definition.Tag}" />
+            </apex:pageBlockSectionItem>
+
+            <apex:pageBlockSectionItem rendered="{!Definition.Label != FullyQualifiedClassName}">
+                <apex:outputLabel >Label</apex:outputLabel>
+                <apex:outputText value="{!Definition.Label}" />
+            </apex:pageBlockSectionItem>
+            
+            <apex:pageBlockSectionItem rendered="{!Definition.Description != 'Undescribed'}">
+                <apex:outputLabel >Description</apex:outputLabel>
+                <apex:outputText value="{!Definition.Description}" />
+            </apex:pageBlockSectionItem>
+
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel >Apex Class</apex:outputLabel>
+                <apex:outputLink value="/{!Id}">{!FullyQualifiedClassName}</apex:outputLink>
+            </apex:pageBlockSectionItem>
+            
+            <apex:pageBlockSectionItem rendered="{!Definition.ServiceConfig != null}">
+                <apex:outputLabel >Service Config</apex:outputLabel>
+                <apex:outputLink value="{!URLFOR($Page.ApexClassConfig, null, ['id'=Definition.Id])}">{!Definition.ServiceConfig}</apex:outputLink>
+            </apex:pageBlockSectionItem>
+            
+            <apex:pageBlockSectionItem rendered="{!Definition.StepConfig != null}">
+                <apex:outputLabel >Step Config</apex:outputLabel>
+                <apex:outputText value="{!Definition.StepConfig}" />
+            </apex:pageBlockSectionItem>
+            
+            <apex:pageBlockSectionItem rendered="{!Definition.Chunks != 1}">
+                <apex:outputLabel style="font-weight: bold;">Chunks</apex:outputLabel>
+                <apex:outputText value="{!Definition.Chunks}" />
+            </apex:pageBlockSectionItem>
+
+            <apex:pageBlockSectionItem rendered="{!Definition.HelpUrl != null}">
+                <apex:outputLabel style="font-weight: bold;">Help</apex:outputLabel>
+                <apex:outputLink value="{!URLFOR(Definition.HelpUrl)}" target="_blank">{!Definition.HelpUrl}</apex:outputLink>
+            </apex:pageBlockSectionItem>
+
+            <apex:pageBlockSectionItem rendered="{!Definition.Icon != 'cog'}">
+                <apex:outputLabel style="font-weight: bold;">Icon</apex:outputLabel>
+                <apex:image value="{!URLFOR('/s.gif')}" styleClass="z-action-col-icon {!Definition.Icon}" />
+            </apex:pageBlockSectionItem>
+
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+    
+    <apex:pageBlock mode="maindetail" title="Input Event Parameters" rendered="{!Definition.Inputs != null}">
+        <apex:pageBlockSection showHeader="false" collapsible="false" columns="1" title="Input Event Parameters" rendered="{!Definition.Inputs != null}">
+            <apex:repeat value="{!Definition.Inputs}" var="key">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!key}</apex:outputLabel>
+                    <apex:outputText >{!Definition.Inputs[key]}</apex:outputText>
+                </apex:pageBlockSectionItem>
+            </apex:repeat>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+    
+    <apex:pageBlock mode="maindetail" title="Output Event Parameters" rendered="{!Definition.Outputs != null}">
+        <apex:pageBlockSection showHeader="false" collapsible="false" columns="1" title="Output Event Parameters" rendered="{!Definition.Outputs != null}">
+            <apex:repeat value="{!Definition.Outputs}" var="key">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!key}</apex:outputLabel>
+                    <apex:outputText >{!Definition.Outputs[key]}</apex:outputText>
+                </apex:pageBlockSectionItem>
+            </apex:repeat>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+    
+    <apex:pageBlock mode="detail" title="Sequence Steps (Version {!$Setup.Application__c.RouterVersion__c})">
+        <apex:pageBlockTable rendered="{!Steps.Empty}" value="{!Steps}" var="step" captionClass="left">
+            <apex:facet name="caption">
+                No records to display
+            </apex:facet>
+        </apex:pageBlockTable>
+        
+        <apex:pageBlockTable rendered="{!NOT(Steps.Empty)}" value="{!Steps}" var="step">
+            
+            <apex:column headerValue="{!$ObjectType.Step__c.Fields.Sequence__c.Label}">
+                <apex:outputField value="{!step.Sequence__c}" />
+            </apex:column>
+            
+            <apex:column headerValue="{!$ObjectType.Step__c.Fields.Position__c.Label}">
+                <apex:outputField value="{!step.Position__c}" />
+            </apex:column>
+            
+            <apex:column headerValue="Step Config" rendered="{!Definition.StepConfig != null}">
+                <apex:outputLink target="_blank" rendered="{!step.ConfigId__c != null}" value="{!URLFOR($Page.StepConfig, null, ['id'=step.Id])}">{!step.ConfigName__c}</apex:outputLink>
+            </apex:column>
+            
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+    
+    <apex:variable var="application" value="Builder" /><!-- Application namespace such as MyApp -->
+    <apex:variable var="resource" value="{!$Resource.SequenceEditZip}" /><!-- The $Resource containing app.js -->
+    <apex:variable var="path" value="" /><!-- Development mode prefixes all resources, production mode loads the Sencha Cmd output -->
+    <apex:variable var="baseCSSPrefix" value="z-" /><!-- Ext.buildSettings.baseCSSPrefix which will be applied before the framework loads -->
+    
+    <!-- BASE CSS PREFIX -->
+    <script>Ext = {buildSettings: {baseCSSPrefix: '{!baseCSSPrefix}'}};</script>
+    
+    <!-- BRIDGING COMPONENTS -->
+    <script>
+        //#1096 piggy back sequence builder
+        window.$RemoteAction = window.$RemoteAction || {};
+        $RemoteAction.SequenceEditExtension = $RemoteAction.SequenceEditExtension || {};
+        
+        window.Id = '{!Id}';
+        
+        window.Launch = function(callback) {
+            //dont launch
+        };
+    </script>
+    
+    <!-- DEVELOPMENT -->
+    <apex:outputPanel rendered="{!LEN(path) != 0}" layout="none">
+        <base href="{!path}{!resource}/" />
+        <script src="{!path}{!resource}/bootstrap.js"></script>
+    </apex:outputPanel>
+    
+    <!-- PRODUCTION -->
+    <apex:outputPanel rendered="{!LEN(path) == 0}" layout="none">
+        <script>Ext = window.Ext || {}; Ext.Boot={};</script>
+        <script src="{!URLFOR(resource, '/app.js')}"></script>
+        <link href="{!URLFOR(resource, '/resources/' + application + '-all.css')}" rel="stylesheet" type="text/css" />
+    </apex:outputPanel>
+    
+</apex:page>

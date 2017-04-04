@@ -1,0 +1,30 @@
+<h1>
+    Operating the audit processes (DO NOT PERFORM THIS TEST)
+</h1>
+
+<p>
+    The audit processes store event parameters so they can be viewed later.
+    <br />Normally this is used for debugging, but they are available on Message__c too.
+</p>
+
+<h2>
+    Procedure
+</h2>
+
+<ol>
+    <li>Create a new Sequence 'AuditTest' containing an 'Audit Initializer' step in position 1.</li>
+    <li>Add three new 'Audit Writer' steps to the sequence. The 'Terminate' should be at the end.</li>
+    <li>Click <strong>Enqueue Test Event</strong>.</li>
+    <li>Wait for the monitor to show all processing has finished.</li>
+</ol>
+
+<h2>
+    Outcomes
+</h2>
+
+<ol>
+    <li>No messages should be graphed in the monitor.</li>
+    <li>View the 'AuditTest' sequence and click <strong>Configure</strong> on the 'Audit Initializer' step.</li>
+    <li>The Audit Groups listview should list exactly one record.</li>
+    <li>Clicking .</li>
+</ol>

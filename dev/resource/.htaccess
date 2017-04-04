@@ -1,0 +1,11 @@
+# cross-origin resource sharing (CORS)
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Headers "origin, x-requested-with, content-type"
+Header set Access-Control-Allow-Methods "PUT, GET, POST, DELETE, OPTIONS"
+Header set Cache-Control "no-cache, must-revalidate"
+Header set Expires "Mon, 26 Jul 1997 05:00:00 GMT"
+Header set Pragma "no-cache"
+
+# drop cachebuster timestamp and package namespace
+RewriteEngine On
+RewriteRule ^(.*)\d{13}/([a-z_0-9]+__)?(.*)$ $3

@@ -1,0 +1,75 @@
+<h1>
+    Documenting Event Parameters
+</h1>
+
+<p>
+    It is important to advertise:
+</p>
+
+<ul>
+    <li>
+        the expected parameters on the input event and
+    </li>
+    <li>
+        the  parameters your service  will either adds or modify on the output events collection.
+    </li>
+</ul>
+
+<p>
+    The mechanism for achieving this is described below.
+</p>
+
+<h2>
+    Input event parameters
+</h2>
+
+<p>
+    The snippet below illustrates how to document parameters that your service expects on any
+    input message.
+</p>
+
+<pre>
+    global class Definition extends Abstract.Service.Definition {
+        //...
+
+        global Map&lt;String,String&gt; Inputs = new Map&lt;String,String&gt;{
+            'c:Url' => 'STRING representing url to scrape.'
+        };
+    }
+</pre>
+
+
+
+<h2>
+    Output event parameters
+</h2>
+
+<p>
+    The snippet below illustrates how to document parameters that your service either adds to your
+    output message collection or modifies on your output message collection.
+</p>
+
+<pre>
+    global class Definition extends Abstract.Service.Definition {
+        //...
+
+        global Map&lt;String,String&gt; Outputs = new Map&lt;String,String&gt;{
+            'c:Data' => 'STRING representing data at url endpoint.'
+        };
+    }
+</pre>
+
+
+<h2>
+    Viewing Service Inputs and Outputs
+</h2>
+
+<p>
+    Documenting the expected inputs and outputs to a service has no effect on the service behavior.
+    It does however provide a useful window into your service for other developers. By clicking on
+    your service from the the services tab, a developer can immeadiately see
+    the asserted expectations of the service as shown below. This is especially useful when access to the source of
+    the service is unavailable (eg compiled third party package)
+
+</p>
+<p><img src="resources/GuideProcessDocumentation/Service-Detail.png" /></p>

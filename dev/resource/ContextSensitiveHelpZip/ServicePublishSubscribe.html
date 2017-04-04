@@ -1,0 +1,52 @@
+<h1>
+    Publish and Subscribe Services
+</h1>
+
+<p>
+    The Publish and Subscribe services are used to bind two or more sequences.
+    This binding is achieved by choosing a common Topic on the step configs.
+    The publish step emits events to the Topic and the subscribe steps consumes them.
+    Any number of subscribers can use this indirection to listen to a given topic..
+</p>
+
+<fieldset>
+    <legend>Note</legend>
+    Subscribe steps must be the first step in a sequence.
+</fieldset>
+
+
+<h2>
+    Publish Step Config
+</h2>
+
+<p>
+    The topic must be specified for each Publish step. To specify the topic:
+</p>
+
+<ol>
+    <li>
+        Click <strong>Configure</strong> next to a Publish step.
+    </li>
+    <li>
+        <strong>Edit</strong> the step config and nominate the topic.
+    </li>
+</ol>
+
+<h2>Subscribe Step Config</h2>
+
+<p> 
+    Similarly, the topic must be specified for any Subscribe step:
+</p>
+
+<ol>
+    <li>
+        Click <strong>Configure</strong> next to a Subscribe step.
+    </li>
+    <li>
+        <strong>Edit</strong> the step config and nominate the topic.
+    </li>
+</ol>
+
+<p>
+    <img width="800" src="resources/Services/PublishSubscribe.png" />
+</p>

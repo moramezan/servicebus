@@ -1,0 +1,61 @@
+{
+    "type": "Ext.data.Model",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "Process",
+        "idProperty": "Id"
+    },
+    "name": "MyModel",
+    "designerId": "d87522cc-f1b9-435f-bfc5-3c4a6a7ff69e",
+    "cn": [
+        {
+            "type": "Ext.data.field.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "Id"
+            },
+            "name": "MyField1",
+            "designerId": "dc7cd208-fbe1-4f09-8805-142a5fd50f90"
+        },
+        {
+            "type": "Ext.data.field.String",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "Name"
+            },
+            "name": "MyString4",
+            "designerId": "6b715b63-388c-4f64-be7a-c21a27363f6a"
+        },
+        {
+            "type": "Ext.data.proxy.Direct",
+            "reference": {
+                "name": "proxy",
+                "type": "object"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "api": [
+                    "{read: $RemoteAction.AsyncApexJobViewExtension.ReadRecords}"
+                ],
+                "designer|displayName": "ProcessProxy",
+                "extraParams": [
+                    "{asyncApexJobId: AsyncApexJob.Id}"
+                ]
+            },
+            "name": "MyDirectProxy1",
+            "designerId": "a85504f4-f0ca-4eab-965e-bbef039de6c6"
+        }
+    ]
+}

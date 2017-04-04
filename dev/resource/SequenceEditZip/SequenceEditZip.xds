@@ -1,0 +1,70 @@
+{
+    "name": "SequenceEditZip",
+    "settings": {
+        "cmd": {
+            "license": "commercial",
+            "cmdVersion": "5.1.3.61",
+            "frameworkVersion": "5.1.1.451"
+        },
+        "canvasControls": {
+            "viewportSize": {
+                "name": "Auto Expand",
+                "builtIn": true,
+                "height": null,
+                "width": null
+            }
+        },
+        "urlPrefix": "http://localhost/SequenceEditZip/",
+        "exportPath": "",
+        "spacesToIndent": 4,
+        "sdkPath": "",
+        "lineEnding": "LF",
+        "genTimestamps": false,
+        "cacheBust": false,
+        "buildShouldOverwriteIndex": true,
+        "generateArchitectVersion": true,
+        "projectHasEnabledWebServer": false,
+        "lockUrlPrefix": false,
+        "installStatus": "Not Installed",
+        "lastBuildSelection": {
+            "value": "webBuild",
+            "display": "Build web app"
+        }
+    },
+    "xdsVersion": "3.2.0",
+    "xdsBuild": 279,
+    "schemaVersion": 1,
+    "upgradeVersion": 310000000001,
+    "framework": "ext51",
+    "viewOrderMap": {
+        "view": [
+            "480d533d-4068-47ba-871e-0ec965d4c536",
+            "ae83cb8d-1acb-4a07-ae00-5d0831f7c483",
+            "a303fb2f-97fc-4fe6-99c0-47b9d29bca63",
+            "9cbadca1-a42c-4363-90df-7ff570bbc81d",
+            "4ae8b5d7-802d-4f04-8a79-a3c87134e2b1",
+            "bf39ad9e-82df-4684-8541-a74710b6a191"
+        ],
+        "store": [
+            "3ced4af9-f789-4610-85a9-4cc6fb7f7684",
+            "c3b6ba4e-5f77-4a60-9b73-0bd9f90467a0"
+        ],
+        "controller": [
+            "4cb5961c-0a1b-4345-85f6-14bba2e41244"
+        ],
+        "model": [
+            "7459911a-fe4d-4b03-8922-843b795633b9",
+            "2e0af0ff-44fe-40cb-a9bd-7050f68308c5"
+        ],
+        "resource": [
+            "74192dbf-46d9-4bfb-a3a8-1e15873b6dec",
+            "e5e4135f-a9c0-4101-9ddf-ea1a27734042",
+            "24759d55-e13c-43d4-9e30-c0ebcde5b089",
+            "21361606-997b-4168-86b5-0fa51912fbb7",
+            "413057b9-3daa-4c23-b503-77fba372b587"
+        ],
+        "app": [
+            "application"
+        ]
+    }
+}

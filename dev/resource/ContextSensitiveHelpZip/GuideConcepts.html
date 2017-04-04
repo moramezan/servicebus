@@ -1,0 +1,125 @@
+<h1>
+    Enterprise Service Concepts
+</h1>
+
+<p>
+    Concepts described in this chapter include:
+</p>
+
+<ul>
+    <li>Sequences</li>
+    <li>Services</li>
+    <li>Configuration</li>
+    <li>Logging</li>
+</ul>
+
+<h2>
+    Sequences
+</h2>
+
+<p>
+    All work under the Services Package is de-constructed into specific tasks. Each task is implemented as
+    an Apex class and is called a Service.
+</p>
+
+<p>
+    Logically related services are assembled by the System Configurator (or Business Analyst) into
+    an ordered arrangement of sequential processing steps collectively called a <em>Sequence</em>
+</p>
+
+<h2>
+    Services
+</h2>
+
+<p>
+    Every service responds to an input event and emits  a list of zero, one or more output
+    events. The Services Package is designed so that output events from any given service automatically
+    feed the input stream of the very next service in a <em>Sequence</em>.
+</p>
+
+<p>
+    The Services Package has by default a number of ready made services that can be composed sequentially
+    so that useful work can be completed. These ready made services include:
+</p>
+
+<ul>
+    <li><em>Debug</em></li>
+    <li><em>Jump</em></li>
+    <li><em>Transaction</em></li>
+    <li><em>Publish</em></li>
+    <li><em>Subscribe</em></li>
+</ul>
+
+<p>
+    Additional services implementing tasks specific to
+    your particular business requirements are easily created.
+
+    Detailed instructions for building such services can be found in the
+    <a href="?topic=GuideDevelopers">Service Developers Guide</a>
+</p>
+
+<h2>
+    Configuration
+</h2>
+
+<p>
+    The Services Package makes a clear distinction between:
+</p>
+
+<ul>
+    <li>
+        <em>what</em> is to be performed (via declarative  assembling of sequential processing
+        steps), versus
+    </li>
+    <li>
+        <em>how</em> it is performed (via imperative apex code defining each service - see
+        <a href="?topic=GuideDevelopers">Service Developers Guide</a> for further details.)
+    </li>
+</ul>
+
+<p>
+    Assembling services in a useful sequence and thereby fulfilling the intent of the underlying
+    business requirement is the domain of the business analyst and not necessarily the Apex
+    developer.
+
+    It therefore the role of the System Orchestrator / Business Analyst to configure the Services Package:
+</p>
+
+<ul>
+    <li>
+        by arranging services in a ] Sequence using a friendly name that
+        adequately describes the collective nature of the work to be preformed (for example
+        <code>ProcessInvoices</code>)
+    </li>
+    <li>
+        by identifying tasks that as yet, have no Apex service implementation (otherwise defined
+        as "missing services")
+    </li>
+    <li>
+        by specifying and provisioning missing services, often by securing the development
+        expertise of a suitable Force.com developer
+    </li>
+</ul>
+
+<h2>
+    Logging
+</h2>
+
+<p>
+    Salesforce prevents writing to the system log in a Production environment. As a useful
+    substitute, the Services Package provides two logging mechanisms:
+</p>
+
+<ul>
+    <li>
+        a <code>DebugService</code> which acts a no-operation service with  no side effects. The Debug
+        service will send an email containing the current event to a nominated user.
+    </li>
+    <li>
+        the <em>Messages</em> tab  detailing the progression of any event from genesis to completion.
+        The detailed view on any selected message displays the parent message and a related list of all
+        child messages. In addition, the exception trace is attached to the message containing any
+        event that fails to
+        process correctly.
+    </li>
+</ul>

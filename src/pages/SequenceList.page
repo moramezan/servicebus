@@ -1,0 +1,57 @@
+<apex:page title="Sequences" setup="true" tabStyle="Sequence__c" standardController="Sequence__c" recordSetVar="msgs" extensions="SequenceListExtension">
+    
+    <script>
+        (function() {
+            if (!document.getElementsByClassName) return;
+            var lis = document.getElementsByClassName('wt-Sequence');
+            if (!lis.length) return;
+            lis[0].className += ' zen-active primaryPalette';
+            var a = lis[0].children[0];
+            if (!a) return;
+            a.className += ' brandPrimaryFgr';
+        }());
+    </script>
+    
+    <apex:sectionHeader title="Sequences" description="A Sequence is an arrangement of processing tasks called steps." help="{!URLFOR($Page.SequenceSplash)}" />
+    
+    <apex:pageMessage severity="Info" summary="Versioning allows you to snapshot all sequences." detail="After committing a new version, choose it below." strength="2">
+    <!--<apex:pageBlock mode="maindetail">-->
+        <!--<apex:pageBlockSection columns="2">-->
+            
+            <!--<apex:pageBlockSectionItem dataStyle="vertical-align: middle;" labelStyle="vertical-align: middle;">-->
+                <apex:outputLabel value="Live system:" />
+                
+                <!-- zero'th version -->
+                <apex:outputPanel layout="none" rendered="{!LatestVersion == null}">
+                    <select disabled="disabled">
+                        <option selected="selected">Version 1</option>
+                    </select>
+                </apex:outputPanel>
+                
+                <!-- subsequent versions -->
+                <apex:outputPanel layout="none" rendered="{!LatestVersion != null}">
+                    <select onchange="Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.SequenceListExtension.ChangeVersion}', this.value, function() {window.location.reload();}); document.getElementById('busy').style.display = 'inline';">
+                        <apex:repeat value="{!RunnableVersions}" var="runnableVersion" rendered="{!LatestVersion != DraftVersion}">
+                            <apex:outputPanel layout="none" rendered="{!$Setup.Application__c.RouterVersion__c == runnableVersion}">
+                                <option value="{!runnableVersion}" selected="selected">Version {!runnableVersion}</option>
+                            </apex:outputPanel>
+                            <apex:outputPanel layout="none" rendered="{!$Setup.Application__c.RouterVersion__c != runnableVersion}">
+                                <option value="{!runnableVersion}">Version {!runnableVersion}</option>
+                            </apex:outputPanel>
+                        </apex:repeat>
+                        <apex:outputPanel layout="none" rendered="{!DraftVersion != null}">
+                            <optgroup label="Version {!DraftVersion} (Draft)" />
+                        </apex:outputPanel>
+                    </select>
+                        <apex:outputText rendered="{!LatestVersion != $Setup.Application__c.RouterVersion__c}"><b style="color: red;"> (newer version available)</b></apex:outputText>
+                    <img id="busy" style="display: none; vertical-align: middle;" src="{!URLFOR('/img/loading.gif')}" />
+                </apex:outputPanel>
+            <!--</apex:pageBlockSectionItem>-->
+            
+        <!--</apex:pageBlockSection>-->
+        
+    <!--</apex:pageBlock>-->
+    </apex:pageMessage>
+    
+    <apex:enhancedList type="Sequence__c" height="600" />
+</apex:page>

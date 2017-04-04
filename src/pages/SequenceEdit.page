@@ -1,0 +1,93 @@
+<apex:page setup="true" standardController="Sequence__c" extensions="SequenceEditExtension" action="{!doRedirect}" title="{!$ObjectType.Sequence__c.Label}: {!Sequence__c.Name}">
+    
+    <script>
+        (function() {
+            if (!document.getElementsByClassName) return;
+            var lis = document.getElementsByClassName('wt-Sequence');
+            if (!lis.length) return;
+            lis[0].className += ' zen-active primaryPalette';
+            var a = lis[0].children[0];
+            if (!a) return;
+            a.className += ' brandPrimaryFgr';
+        }());
+    </script>
+    
+    <apex:pageMessages showDetail="true" />
+    
+    <apex:sectionHeader title="Version {!DraftVersion} (Draft)" subtitle="{!Sequence__c.Name}" description="Each step handles events as they flow through the sequence. Drag and drop the steps to reposition them." help="{!URLFOR($Page.SequenceSplash)}" />
+    
+    <!-- make the loading mask a little bit less harsh -->
+    <style>div[id="{!$Component.pageBlockId}"] div.z-mask {background-color: rgba(204,204,204,0.6);}</style>
+    
+    <apex:pageBlock id="pageBlockId" title="Steps">
+        <apex:pageBlockButtons location="top" id="pageBlockButtonsId">
+            
+            <!-- #768 indicate messages flowing through sequence -->
+            <apex:form style="display:inline;float:right;" id="busy">
+                <apex:actionPoller action="{!countRoutedMessages}" interval="5" reRender="busy" />
+                <apex:outputText rendered="{!RoutedMessages > 0}" value="{!RoutedMessages}" style="position:relative;top:0px;right:8px;" title="Services are executing" />
+                <apex:image rendered="{!RoutedMessages > 0}" value="{!URLFOR('/img/loading.gif')}" style="position:relative;top:4px;" title="Services are executing" />
+            </apex:form>
+            
+        </apex:pageBlockButtons>
+    </apex:pageBlock>
+    
+    <apex:variable var="application" value="Builder" /><!-- Application namespace such as MyApp -->
+    <apex:variable var="resource" value="{!$Resource.SequenceEditZip}" /><!-- The $Resource containing app.js -->
+    <apex:variable var="path" value="" /><!-- Development mode prefixes all resources, production mode loads the Sencha Cmd output -->
+    <apex:variable var="baseCSSPrefix" value="z-" /><!-- Ext.buildSettings.baseCSSPrefix which will be applied before the framework loads -->
+    
+    <!-- BASE CSS PREFIX -->
+    <script>Ext = {buildSettings: {baseCSSPrefix: '{!baseCSSPrefix}'}};</script>
+    
+    <!-- BRIDGING COMPONENTS -->
+    <script>
+        window.$Component = window.$Component || {};
+        $Component.pageBlockId = '{!$Component.pageBlockId}';
+        $Component.pageBlockButtonsId = '{!$Component.pageBlockId.pageBlockButtonsId}';
+        
+        window.$RemoteAction = window.$RemoteAction || {};
+        $RemoteAction.SequenceEditExtension = $RemoteAction.SequenceEditExtension || {};
+        $RemoteAction.SequenceEditExtension.fetchSteps = '{!$RemoteAction.SequenceEditExtension.fetchSteps}';
+        $RemoteAction.SequenceEditExtension.destroyStep = '{!$RemoteAction.SequenceEditExtension.destroyStep}';
+        $RemoteAction.SequenceEditExtension.enqueue = '{!$RemoteAction.SequenceEditExtension.enqueue}';
+        $RemoteAction.SequenceEditExtension.appendStep = '{!$RemoteAction.SequenceEditExtension.appendStep}';
+        $RemoteAction.SequenceEditExtension.moveStepBefore = '{!$RemoteAction.SequenceEditExtension.moveStepBefore}';
+        $RemoteAction.SequenceEditExtension.moveStepAfter = '{!$RemoteAction.SequenceEditExtension.moveStepAfter}';
+        $RemoteAction.SequenceEditExtension.persistConfigNameOnStep = '{!$RemoteAction.SequenceEditExtension.persistConfigNameOnStep}';
+        
+        window.$Page = window.$Page || {};
+        $Page.ApexClassView = '{!$Page.ApexClassView}';
+        $Page.StepConfig = '{!$Page.StepConfig}';
+        
+        TerminateApexTypeName = '{!TerminateApexTypeName}';
+        ApexClasses = JSON.parse('{!JSENCODE(ApexClasses)}'); //#782 stored xss
+        Steps = JSON.parse('{!JSENCODE(Steps)}'); //#782 stored xss
+        Id = '{!Id}';
+        
+        window.URLFOR = window.URLFOR || {};
+        URLFOR['/'] = '{!URLFOR("/")}';
+        URLFOR[$Page.ApexClassView] = '{!URLFOR($Page.ApexClassView, null, ["id"="000000000000000AAA"])}';
+        URLFOR[$Page.StepConfig] = '{!URLFOR($Page.StepConfig, null, ["id"="000000000000000AAA"])}';
+        URLFOR[$Page.MessageView] = '{!URLFOR($Page.MessageView, null, ["mid"="000000000000000AAA"])}';
+
+        window.Launch = function(callback) {
+            //#1096
+            callback();
+        };
+    </script>
+    
+    <!-- DEVELOPMENT -->
+    <apex:outputPanel rendered="{!LEN(path) != 0}" layout="none">
+        <base href="{!path}{!resource}/" />
+        <script src="{!path}{!resource}/bootstrap.js"></script>
+    </apex:outputPanel>
+    
+    <!-- PRODUCTION -->
+    <apex:outputPanel rendered="{!LEN(path) == 0}" layout="none">
+        <script>Ext = window.Ext || {}; Ext.Boot={};</script>
+        <script src="{!URLFOR(resource, '/app.js')}"></script>
+        <link href="{!URLFOR(resource, '/resources/' + application + '-all.css')}" rel="stylesheet" type="text/css" />
+    </apex:outputPanel>
+    
+</apex:page>

@@ -1,0 +1,85 @@
+<h1>
+    Event Parameters
+</h1>
+
+<p>
+    Services communicate with each other using events, and all events carry parameters.
+    An event is a <code>Map&lt;String,Object&gt;</code> and developers use string
+    names to get parameter values. All parameter names must be prepended by a namespace prefix or
+    the 'c' prefix, then a colon. For example:
+</p>
+
+<table>
+    <tr>
+        <th>Example Event</th>
+        <th colspan="2">Parameter Prefix</th>
+        <th>Usage</th>
+    </tr>
+    <tr>
+        <td><code>{"c:PayrollPeriod":2015}</code></td>
+        <td><code>c:</code></td>
+        <td>(custom)</td>
+        <td>Parameters set by custom code outside a package must use the <code>c</code> prefix.</td>
+    </tr>
+    <tr>
+        <td><code>{"AcmeCo:Anvils":["A","B"]}</code></td>
+        <td><code>AcmeCo:</code></td>
+        <td>(third-party)</td>
+        <td>Services in managed packages must namespace prefix their event parameters.</td>
+    </tr>
+</table>
+
+<p>
+    All event parameters are:
+</p>
+
+<ul>
+    <li>cumulative: event parameters carry through a sequence and are available to subsequent steps,</li>
+    <li>case sensitive: use the verbatim namespace prefix and upper camel case for parameter names,</li>
+    <li>namespace agnostic: any event may carry any number of parameters from any number of namespaces,</li>
+</ul>
+
+<fieldset>
+    <legend>Note</legend>
+    Only read or write to documented parameters.
+</fieldset>
+
+<h1>
+    Routing Event Parameters
+</h1>
+
+<dl>
+    <dt>ToService</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>Routes an event directly to a Service using its fully qualified class name.</dd>
+    
+    <dt>ToSequence</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>Routes an event to the sequence named here. This value is case-sensitive.</dd>
+</dl>
+
+<h1>
+    Standard Event Parameters
+</h1>
+
+<dl>
+    <dt>RecordId</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_id.htm" target="_blank">Id</a></dd>
+    <dd>Id of an SObject on which a service will operate.
+
+    <dt>CorrelationUuid</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>Universally unique identifier (v4) which can be used to group everything spawned from any entry point event.</dd>
+
+    <dt>EntryPointTimestamp</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_string.htm" target="_blank">String</a></dd>
+    <dd>Exact date and time of the entry point event that spawned this event. For example this carries the run time of Schedule events.</dd>
+
+    <dt>EnqueueUserId</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_id.htm" target="_blank">Id</a></dd>
+    <dd>Read-only Id of the user that enqueued any chain of events.</dd>
+    
+    <dt>JobId</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_methods_system_id.htm" target="_blank">Id</a></dd>
+    <dd>Id of the Queueable AsyncApexJob that injected the entry point event.</dd>
+</dl>

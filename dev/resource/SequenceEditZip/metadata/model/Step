@@ -1,0 +1,146 @@
+{
+    "type": "Ext.data.Model",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "Step",
+        "idProperty": "Id"
+    },
+    "name": "MyModel",
+    "designerId": "2e0af0ff-44fe-40cb-a9bd-7050f68308c5",
+    "cn": [
+        {
+            "type": "Ext.data.field.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "Id"
+            },
+            "name": "MyField1",
+            "designerId": "b9d98b17-2049-41d3-998f-98ca5ff0528b"
+        },
+        {
+            "type": "Ext.data.field.String",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "Name"
+            },
+            "name": "MyString4",
+            "designerId": "8ad199a1-d824-4443-b212-b68b03b097a9"
+        },
+        {
+            "type": "Ext.data.field.Integer",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "Position"
+            },
+            "name": "MyInteger",
+            "designerId": "85d1e8d6-4489-40a7-bf80-5fb7175a8eca"
+        },
+        {
+            "type": "Ext.data.field.String",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "ApexClassId",
+                "reference": "Service"
+            },
+            "name": "MyString8",
+            "designerId": "418a8f5a-ee31-4cb4-b214-504d4732333f"
+        },
+        {
+            "type": "Ext.data.field.String",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "ApexTypeName",
+                "persist": null,
+                "reference": null
+            },
+            "name": "MyString7",
+            "designerId": "2417ac6b-1725-411e-8f3a-b68b98b80d8a"
+        },
+        {
+            "type": "Ext.data.field.String",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "ConfigId",
+                "persist": null
+            },
+            "name": "MyString13",
+            "designerId": "1bed569e-6744-4c08-8171-39febd9b03c9"
+        },
+        {
+            "type": "Ext.data.field.String",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "ConfigName",
+                "persist": null
+            },
+            "name": "MyString14",
+            "designerId": "9203ffa3-24f5-4e0a-824a-37a3a27dcd6b"
+        },
+        {
+            "type": "Ext.data.proxy.Direct",
+            "reference": {
+                "name": "proxy",
+                "type": "object"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "api": [
+                    "{read: $RemoteAction.SequenceEditExtension.fetchSteps}"
+                ],
+                "designer|displayName": "StepProxy",
+                "extraParams": [
+                    "{Id: Id}"
+                ]
+            },
+            "name": "MyDirectProxy",
+            "designerId": "c0126497-cee3-4add-98a5-5a05f7c04656",
+            "cn": [
+                {
+                    "type": "Ext.data.reader.Json",
+                    "reference": {
+                        "name": "reader",
+                        "type": "object"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|displayName": "StepReader"
+                    },
+                    "name": "MyJsonReader",
+                    "designerId": "dd0e8917-10b9-4dab-8d7b-e49b6adb3115"
+                }
+            ]
+        }
+    ]
+}

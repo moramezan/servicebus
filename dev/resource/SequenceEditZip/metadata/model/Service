@@ -1,0 +1,107 @@
+{
+    "type": "Ext.data.Model",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "Service",
+        "idProperty": "Id"
+    },
+    "name": "MyModel",
+    "designerId": "7459911a-fe4d-4b03-8922-843b795633b9",
+    "cn": [
+        {
+            "type": "Ext.data.field.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "Id"
+            },
+            "name": "MyField",
+            "designerId": "f2733be1-0b64-4107-991d-f1cf5d6de106"
+        },
+        {
+            "type": "Ext.data.field.String",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "Description"
+            },
+            "name": "MyString1",
+            "designerId": "08904ef1-5c67-48ce-8920-17ff5b5174a0"
+        },
+        {
+            "type": "Ext.data.field.String",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "Label"
+            },
+            "name": "MyString",
+            "designerId": "4dbd6e6c-4efc-4cfa-98ef-fa2a7e0520c9"
+        },
+        {
+            "type": "Ext.data.field.String",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "Tag"
+            },
+            "name": "MyString2",
+            "designerId": "d687b3bf-0347-4c07-86c7-9417a9237690"
+        },
+        {
+            "type": "Ext.data.field.String",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "Icon"
+            },
+            "name": "MyString3",
+            "designerId": "03ada7c8-f90e-49f3-a287-1e0d030b7967"
+        },
+        {
+            "type": "Ext.data.field.String",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "Cardinality"
+            },
+            "name": "MyString15",
+            "designerId": "b02f16c4-42ea-46fd-a987-72beea998bdb"
+        },
+        {
+            "type": "Ext.data.field.String",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "StepConfig"
+            },
+            "name": "MyString6",
+            "designerId": "f60d391d-cc3d-420e-8a5a-f5d0688fedf5"
+        }
+    ]
+}

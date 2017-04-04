@@ -1,0 +1,5 @@
+<apex:page showHeader="false" controller="ConfigureController" action="{!doRedirect}" cache="false">
+
+    <apex:dynamicComponent componentValue="{!DynamicComponent}" />
+
+</apex:page>

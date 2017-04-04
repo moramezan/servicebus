@@ -1,0 +1,192 @@
+<h1>
+    Service Developers Guide
+</h1>
+
+<h2>
+    About This Guide
+</h2>
+
+<p>
+    This guide is intended for developers who are tasked with building new services.
+    The purpose of this guide is to:
+</p>
+
+<ol>
+    <li>
+        explain event driven concepts
+    </li>
+    <li>
+        describe the creation of a custom service in Apex
+    </li>
+</ol>
+
+<h2>
+    Getting Started
+</h2>
+
+<p>
+    The Services Package has a number of pre-packaged services that can be sequenced together to perform work.
+    These include Aggregate, Jump, Publish, Subscribe, Schedule, Transaction, Debug, and Terminate.
+</p>
+
+<p>
+    Custom services must be created to perform tasks specific to new business requirements.
+    The Services Package conforms to the <a href="https://github.com/bigassforce/OASIS">Open Apex Service Specification</a> or OASIS.
+    This specification defines attributes of the service so that the container can host and execute the service logic in a consistent manner.
+    All services contain an execute method in the following form:
+</p>
+
+<p>
+    <code>&nbsp;&nbsp;&nbsp;&nbsp;Event[] execute(Event);</code>
+</p>
+
+<p>
+    This illustrates how all services take exactly one input event.
+    They perform the business logic and then emit zero, one or many output events.
+    This is so that the output from any upstream service can be directly
+    re-purposed as inputs to subsequent downstream services.
+</p>
+
+<p>
+&nbsp;
+</p>
+
+<h1>
+    Development Lifecycle
+</h1>
+
+<p>
+    The list below describes the order of activities for creating, testing and deploying services:
+</p>
+
+<ol>
+    <li>
+        Define the input event
+    </li>
+    <li>
+        Define the output event(s) (if any)
+    </li>
+    <li>
+        <p>
+            Define the service activity in the form of a specification.
+        </p>
+        <fieldset>
+            <legend>Note</legend>
+            This step would normally be performed by an architect or business analyst.
+        </fieldset>
+    </li>
+    <li>
+        <p>
+            Author the service according to specification with accompanying unit tests.
+        </p>
+        <fieldset>
+            <legend>Note</legend>
+            This step would normally be performed by a salesforce developer.
+        </fieldset>
+    </li>
+    <li>
+        Visually test the service - see <a href="?topic=GuidePostBuildSteps">Post Build Steps</a>
+    </li>
+    <li>
+        Create a changeset or package containing your service and install in the runtime enviroment
+        (Sandbox, Production, etc). - see <a href="?topic=GuidePostBuildSteps">Post Build Steps</a>
+    </li>
+</ol>
+
+<h2>
+    Define the Service
+</h2>
+
+<p>
+    Define the input event:
+</p>
+
+<ul>
+    <li>
+        Every input event  is a loosely typed key-value map of the form
+        <code>Map&lt;String,Object&gt;</code>
+    </li>
+    <li>
+        Of particular importance is the <code>RecordId</code> parameter.
+    </li>
+    <li>
+        The <code>RecordId</code> parameter points at the underlying data associated with the event and
+        is normally (but not necessarily) a reference to an underlying SObject instance.
+    </li>
+    <li>
+        The service author should be familiar with the structure of the data (normally an SObject) pointed at by
+        the event so that he/she can adequately retrieve and write to this object.
+    </li>
+</ul>
+
+<p>
+    Define the output event(s):
+</p>
+
+<ul>
+    <li>
+        An output event  is takes the same shape as an input event - that is, a
+        loosely typed key-value map of the form <code>Map&lt;String,Object&gt;</code>
+    </li>
+    <li>
+        <p>
+            A service returns an output collection containing zero, one or more events in the form
+            <code>List&lt;Map&lt;String,Object&gt;&gt;</code>
+        </p>
+        <fieldset>
+            <legend>Note</legend>
+            Normally the output collection will simply contain a single output event, namely the
+            re-purposed input event.
+        </fieldset>
+    </li>
+</ul>
+
+<h2>
+    Defining the service activity
+</h2>
+
+<ul>
+    <li>
+        The service activity represents custom logic that is not currently available under the Services Package,
+        either because such logic is is not represented by one of the native services, or
+        because such logic has not been previously created and/or registered.
+    </li>
+    <li>
+        To encourage reuse,
+        the service activity should be <em>specific</em> and should not overreach. An example of specific activity might be
+        converting Unix line terminators to Windows line terminators. An example of
+        <em>un-specific</em> activity might be the counting of word occurrences in a file,
+        alphabetising the summary counts by word and finally reporting the results.
+    </li>
+    <li>
+        Overly general activities should be re-specified into separate specific activites. Using
+        the example above, one could envisage three separate activities, namely: count, sort and
+        report. The more focused an activity, the easier it becomes to write comprehensive, reliable
+        unit tests. As services become easier to repurpose in other sequences
+        the lower the required coding effort becomes for the organisation as a  whole.
+        This results in lower programming effort, lower  potential for bugs  and lower development cost
+        overall.
+    </li>
+</ul>
+
+<p>
+    The Services Package implements the <strong>Step Config</strong>
+    and <strong>Service Config</strong> attributes to accommodate variations in
+    service behavior. More details can be found
+    <a href="https://github.com/bigassforce/OASIS" target="_blank">here</a>.
+</p>
+
+<ul>
+    <li>
+        <strong>Step Config</strong> allows a service to vary behavior
+        specific to the context of the  <em>step</em> in the Sequence that
+        the Service belongs to.
+    </li>
+    <li>
+        <strong>Service Config</strong> allows a service to vary behavior
+        without reference to the context of the sequence step containing the service.
+        Service Config normally applies to credentials paramaeters
+        specific to the org the service is used in - for example, the recipient of a
+        eamil for the Debug service, Twitter oauth credentials, etc
+    </li>
+</ul>

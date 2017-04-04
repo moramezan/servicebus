@@ -1,0 +1,556 @@
+{
+    "type": "Ext.grid.Panel",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "bodyBorder": false,
+        "bodyCls": [
+            "steps"
+        ],
+        "border": false,
+        "designer|userAlias": "main",
+        "designer|userClassName": "Main",
+        "forceFit": true,
+        "header": false,
+        "height": null,
+        "hideHeaders": true,
+        "itemId": "steps",
+        "overCls": null,
+        "scrollable": false,
+        "store": "Steps",
+        "title": null,
+        "width": null
+    },
+    "name": "MyGridPanel",
+    "configAlternates": {
+        "scrollable": "boolean"
+    },
+    "designerId": "9cbadca1-a42c-4363-90df-7ff570bbc81d",
+    "viewControllerInstanceId": "bf39ad9e-82df-4684-8541-a74710b6a191",
+    "viewModelInstanceId": "4ae8b5d7-802d-4f04-8a79-a3c87134e2b1",
+    "cn": [
+        {
+            "type": "Ext.view.Table",
+            "reference": {
+                "name": "viewConfig",
+                "type": "object"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|displayName": "StepsGridView",
+                "loadMask": false,
+                "overItemCls": "",
+                "stripeRows": false
+            },
+            "name": "MyGridView",
+            "configAlternates": {
+                "loadMask": "boolean",
+                "scrollable": "boolean"
+            },
+            "designerId": "478a0514-b2f2-4e74-b010-979f539974e4",
+            "cn": [
+                {
+                    "type": "Ext.grid.plugin.DragDrop",
+                    "reference": {
+                        "name": "plugins",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|displayName": "StepsGridPlugin",
+                        "pluginId": "dragdrop"
+                    },
+                    "name": "MyGridDragDropPlugin",
+                    "designerId": "691ee87e-a31f-4f7d-bb57-2ca6f00c1fa1"
+                }
+            ]
+        },
+        {
+            "type": "Ext.grid.column.Column",
+            "reference": {
+                "name": "columns",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "menuDisabled": true,
+                "tdCls": "grippy",
+                "text": "Order",
+                "tooltip": "Drag and drop to reorganize",
+                "width": 16
+            },
+            "name": "MyColumn6",
+            "configAlternates": {
+                "scrollable": "boolean"
+            },
+            "designerId": "4c5de253-309b-446d-ae37-11aa2d5adcdd"
+        },
+        {
+            "type": "Ext.grid.column.Action",
+            "reference": {
+                "name": "columns",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "defaultWidth": null,
+                "designer|displayName": "Cardinality",
+                "width": 25
+            },
+            "name": "MyActionColumn2",
+            "designerId": "9b5665d8-3685-4b18-9f1a-10f6f371e5e4",
+            "cn": [
+                {
+                    "type": "actioncolumnitem",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|displayName": "Icon"
+                    },
+                    "name": "MyActionColumnItem2",
+                    "designerId": "fbd79fa8-58aa-4dc3-a220-757ce6ea3af6"
+                },
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "value",
+                            "metaData",
+                            "record",
+                            "rowIndex",
+                            "colIndex",
+                            "store",
+                            "view"
+                        ],
+                        "fn": "renderer",
+                        "implHandler": [
+                            "var apexClassId = record.get('ApexClassId');",
+                            "var service = Ext.getStore('Services').getById(apexClassId);",
+                            "var cardinality = service && service.get('Cardinality') || 'Zero'; //#875 invalid service",
+                            "",
+                            "//set the cardinality column's icon from each service",
+                            "this.items[0].iconCls = cardinality;",
+                            "if (cardinality == 'One') this.items[0].tooltip = cardinality + ' output event emitted for each input event.';",
+                            "if (cardinality != 'One') this.items[0].tooltip = cardinality + ' output events emitted for each input event.';"
+                        ]
+                    },
+                    "name": "renderer",
+                    "designerId": "8262b9f2-a862-432b-9796-ed271a120e12"
+                }
+            ]
+        },
+        {
+            "type": "Ext.grid.column.Number",
+            "reference": {
+                "name": "columns",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "align": null,
+                "dataIndex": "Position",
+                "defaultWidth": null,
+                "format": "0",
+                "tdCls": "position",
+                "text": "Position",
+                "width": 20
+            },
+            "name": "MyNumberColumn",
+            "designerId": "1bf436e3-408b-4784-8d6a-7e0742dbbdcb"
+        },
+        {
+            "type": "Ext.grid.column.Column",
+            "reference": {
+                "name": "columns",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "align": "center",
+                "dataIndex": "ConfigId",
+                "tdCls": "link",
+                "text": "Delete",
+                "width": 26
+            },
+            "name": "MyColumn1",
+            "configAlternates": {
+                "scrollable": "boolean"
+            },
+            "designerId": "e0ebddb4-37d7-4571-8f52-30a0ab413b8d",
+            "cn": [
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "value",
+                            "metaData",
+                            "record",
+                            "rowIndex",
+                            "colIndex",
+                            "store",
+                            "view"
+                        ],
+                        "fn": "renderer",
+                        "implHandler": [
+                            "var apexTypeName = record.get('ApexTypeName');",
+                            "",
+                            "//TERMINATE step cannot be deleted",
+                            "if (apexTypeName != TerminateApexTypeName) return Ext.DomHelper.createHtml({",
+                            "    'tag': 'a',",
+                            "    'html': 'Del',",
+                            "    'class': 'deletelink',",
+                            "    'onclick': 'return false;',",
+                            "    'title': 'Delete Step',",
+                            "    'href': '#'",
+                            "}); else return Ext.DomHelper.createHtml({",
+                            "    'tag': 'a',",
+                            "    'html': 'Del',",
+                            "    'class': 'terminatelink',",
+                            "    'onclick': 'return false;',",
+                            "    'title': 'The Terminate step must appear at the end of all sequences and cannot be deleted.'",
+                            "});",
+                            ""
+                        ]
+                    },
+                    "name": "renderer",
+                    "designerId": "953df7e9-d3f4-414f-8ff5-9422cb948267"
+                }
+            ]
+        },
+        {
+            "type": "Ext.grid.column.Column",
+            "reference": {
+                "name": "columns",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "dataIndex": "ConfigId",
+                "tdCls": "link",
+                "text": "Configure",
+                "width": 60
+            },
+            "name": "MyColumn",
+            "configAlternates": {
+                "scrollable": "boolean"
+            },
+            "designerId": "5756960b-c7e9-4a88-9e53-477e63b3367c",
+            "cn": [
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "value",
+                            "metaData",
+                            "record",
+                            "rowIndex",
+                            "colIndex",
+                            "store",
+                            "view"
+                        ],
+                        "fn": "renderer",
+                        "implHandler": [
+                            "var apexClassId = record.get('ApexClassId');",
+                            "var service = Ext.getStore('Services').getById(apexClassId);",
+                            "var config = service && service.get('StepConfig'); //#875 invalid service",
+                            "",
+                            "//some services have no configuration",
+                            "if (config) return '| ' + Ext.DomHelper.createHtml({",
+                            "    'tag': 'a',",
+                            "    'html': 'Config',",
+                            "    'class': 'configurelink',",
+                            "    'onclick': 'return false;',",
+                            "    'title': 'Manage Step Config',",
+                            "    'href': '#'",
+                            "});"
+                        ]
+                    },
+                    "name": "renderer",
+                    "designerId": "dedacd01-80aa-4f76-b8db-8f0bd8d10165"
+                }
+            ]
+        },
+        {
+            "type": "Ext.grid.column.Action",
+            "reference": {
+                "name": "columns",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "align": "center",
+                "designer|displayName": "Icon",
+                "tdCls": "icon",
+                "width": 25
+            },
+            "name": "MyActionColumn1",
+            "configAlternates": {
+                "scrollable": "boolean"
+            },
+            "designerId": "cb648509-0754-4021-9593-b69742cfaac2",
+            "cn": [
+                {
+                    "type": "actioncolumnitem",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|displayName": "cog",
+                        "iconCls": "cog"
+                    },
+                    "name": "MyActionColumnItem1",
+                    "designerId": "4e36fcbd-8800-4f11-bb5f-559a4f081feb"
+                },
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "value",
+                            "metaData",
+                            "record",
+                            "rowIndex",
+                            "colIndex",
+                            "store",
+                            "view"
+                        ],
+                        "fn": "renderer",
+                        "implHandler": [
+                            "var apexClassId = record.get('ApexClassId');",
+                            "var service = Ext.getStore('Services').getById(apexClassId);",
+                            "var icon = service && service.get('Icon') || 'cross'; //#875 invalid service",
+                            "",
+                            "//set the action column's icon from each service",
+                            "this.items[0].iconCls = icon;"
+                        ]
+                    },
+                    "name": "renderer",
+                    "designerId": "3b7d4371-87b4-4146-8581-f71c8b470599"
+                }
+            ]
+        },
+        {
+            "type": "Ext.grid.column.Column",
+            "reference": {
+                "name": "columns",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "dataIndex": "ServiceName",
+                "menuDisabled": true,
+                "sortable": false,
+                "text": "Service",
+                "width": 180
+            },
+            "name": "MyColumn3",
+            "configAlternates": {
+                "scrollable": "boolean"
+            },
+            "designerId": "00f4d5b1-cdcd-4cbf-885a-f23531ff7ba5",
+            "cn": [
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "value",
+                            "metaData",
+                            "record",
+                            "rowIndex",
+                            "colIndex",
+                            "store",
+                            "view"
+                        ],
+                        "fn": "renderer",
+                        "implHandler": [
+                            "var apexClassId = record.get('ApexClassId');",
+                            "var service = Ext.getStore('Services').getById(apexClassId);",
+                            "var name = service && service.get('Label');",
+                            "if (!service) name = '<strong>' + record.get('ApexTypeName') + '</strong>'; //#875 invalid service",
+                            "",
+                            "//#776",
+                            "return Ext.DomHelper.createHtml({",
+                            "    'tag': 'span',",
+                            "    'html': name,",
+                            "    'title': name",
+                            "});"
+                        ]
+                    },
+                    "name": "renderer",
+                    "designerId": "00e4b76c-a61d-43ad-b398-95eb09176ae6"
+                }
+            ]
+        },
+        {
+            "type": "Ext.grid.column.Column",
+            "reference": {
+                "name": "columns",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "dataIndex": "ConfigName",
+                "flex": 1,
+                "menuDisabled": true,
+                "sortable": false,
+                "text": "ConfigNameOrServiceDescription"
+            },
+            "name": "MyColumn4",
+            "configAlternates": {
+                "scrollable": "boolean"
+            },
+            "designerId": "a4276fa2-0c0e-4ebc-8544-ca6ff65676fa",
+            "cn": [
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "value",
+                            "metaData",
+                            "record",
+                            "rowIndex",
+                            "colIndex",
+                            "store",
+                            "view"
+                        ],
+                        "fn": "renderer",
+                        "implHandler": [
+                            "var apexClassId = record.get('ApexClassId');",
+                            "var service = Ext.getStore('Services').getById(apexClassId);",
+                            "",
+                            "//#875 invalid service",
+                            "if (!service) return Ext.DomHelper.createHtml({",
+                            "    'tag': 'span',",
+                            "    'html': '<strong>Invalid service, class is missing or malformed.</strong>',",
+                            "    'title': 'Invalid service, class is missing or malformed.' //#776",
+                            "});",
+                            "",
+                            "//service description",
+                            "if (!service.get('StepConfig')) return Ext.DomHelper.createHtml({",
+                            "    'tag': 'span',",
+                            "    'html': service.get('Description'),",
+                            "    'title': service.get('Description') //#776",
+                            "});",
+                            "",
+                            "//step missing config",
+                            "if (!record.get('ConfigId')) return Ext.DomHelper.createHtml({",
+                            "    'tag': 'span',",
+                            "    'html': '<strong>This step must be configured.</strong>',",
+                            "    'title': 'This step must be configured.' //#776",
+                            "});",
+                            "",
+                            "//step config is custom setting",
+                            "if (record.get('ConfigId') == record.get('ConfigName')) return Ext.DomHelper.createHtml({",
+                            "    'tag': 'span',",
+                            "    'html': service.get('Description'),",
+                            "    'title': service.get('Description') //#1047",
+                            "});",
+                            "",
+                            "//step has config",
+                            "else return Ext.DomHelper.createHtml({",
+                            "    'tag': 'span',",
+                            "    'html': record.get('ConfigName'),",
+                            "    'title': record.get('ConfigName') //#776",
+                            "});"
+                        ]
+                    },
+                    "name": "renderer",
+                    "designerId": "88c236da-0846-456d-8392-bf6c0dd45715"
+                }
+            ]
+        },
+        {
+            "type": "Ext.grid.column.Column",
+            "reference": {
+                "name": "columns",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "align": "right",
+                "text": "HelpUrl",
+                "width": 125
+            },
+            "name": "MyColumn5",
+            "configAlternates": {
+                "scrollable": "boolean"
+            },
+            "designerId": "1817ca8c-536e-4ef9-b081-be5d5e6023fc",
+            "cn": [
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "value",
+                            "metaData",
+                            "record",
+                            "rowIndex",
+                            "colIndex",
+                            "store",
+                            "view"
+                        ],
+                        "fn": "renderer",
+                        "implHandler": [
+                            "var apexClassId = record.get('ApexClassId');",
+                            "var service = Ext.getStore('Services').getById(apexClassId);",
+                            "",
+                            "//service may not have docs",
+                            "if (service) return Ext.DomHelper.createHtml({",
+                            "    'tag': 'a',",
+                            "    'html': 'Help for this Service',",
+                            "    'class': 'documentationlink',",
+                            "    'title': 'Configure Step',",
+                            "    'href': URLFOR[$Page.ApexClassView].replace('000000000000000AAA', apexClassId),",
+                            "    'target': '_blank'",
+                            "});"
+                        ]
+                    },
+                    "name": "renderer",
+                    "designerId": "0d98986c-7c13-4764-adce-a26fe47e8cd2"
+                }
+            ]
+        }
+    ]
+}

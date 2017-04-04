@@ -1,0 +1,50 @@
+<h1>
+    Dynamic Enqueue
+</h1>
+<h2>
+    Visual Flow invoke
+</h2>
+
+<p>
+    Visual Flows can leverage the Services Package to deal with high volumes from Cloud Flow Designer.
+</p>
+
+<p>
+    <code>global Process.PluginResult invoke(Process.PluginRequest request)</code>
+</p>
+
+<dl>
+    <dt>request</dt>
+    <dd>Type: <a href="https://www.salesforce.com/us/developer/docs/apexcode/Content/apex_plugin_request.htm" target="_blank">Process.PluginRequest</a></dd>
+    <dd>The request class itself is constructed with a Map&lt;String,Object&gt; that directly becomes the event parameters.</dd>
+</dl>
+
+<p>
+    The  returned Process.PluginResult will contain an <code>JobId</code> parameter identifying your submission.
+</p>
+
+<fieldset>
+    <legend>Note</legend>
+    <p>
+        The Process.Plugin implementation can be leveraged to enqueue events without creating any package dependency.
+    </p>
+    
+    <p>
+        Use this when authoring and distributing AppExchange packages that need to submit events to services, for example:
+    </p>
+    
+    <pre>
+        //assemble input event parameters
+        Map&lt;String,Object&gt; event = new Map&lt;String,Object&gt;();
+        event.put('ToSequence', 'Generate_PDF_Statements');
+        
+        //immediately submit event to service
+        Process.Plugin enqueue = (Process.Plugin)Type.forName('Services.Enqueue').newInstance();
+        Process.PluginResult result = enqueue.invoke(new Process.PluginRequest(event));
+        
+        //access job id
+        Id jobId = result.OutputParameters.get('JobId');
+        System.debug(jobId); //707j0000008MzD6
+    </pre>
+</fieldset>
+

@@ -1,0 +1,3 @@
+<apex:page setup="true" action="{!URLFOR($Page.ContextSensitiveHelp, null, ['topic'='SplashSequence'])}">
+    <apex:pageMessages showDetail="true" />
+</apex:page>

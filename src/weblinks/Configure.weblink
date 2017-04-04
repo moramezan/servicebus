@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomPageWebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <availability>online</availability>
+    <description>Services configuration link.</description>
+    <displayType>link</displayType>
+    <encodingKey>UTF-8</encodingKey>
+    <linkType>url</linkType>
+    <masterLabel>Configure</masterLabel>
+    <openType>replace</openType>
+    <protected>true</protected>
+    <url>{!URLFOR(&quot;/apex/&quot; + $Setup.Application__c.PrefixBar__c + &quot;Configure&quot;, null, [&quot;url&quot;=$Api.Enterprise_Server_URL_340,&quot;retURL&quot;=$Request.retURL])}</url>
+</CustomPageWebLink>

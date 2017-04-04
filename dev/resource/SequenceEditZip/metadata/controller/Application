@@ -1,0 +1,496 @@
+{
+    "type": "Ext.app.Controller",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "Application"
+    },
+    "name": "MyController",
+    "designerId": "4cb5961c-0a1b-4345-85f6-14bba2e41244",
+    "cn": [
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "button#newStep",
+                "designer|targetType": "Ext.button.Button",
+                "fn": "onButtonBeforeRender",
+                "implHandler": [
+                    "var button = component;",
+                    "var tag2services = {};",
+                    "",
+                    "Ext.getStore('Services').each(function(service) {",
+                    "    var services = [];",
+                    "    tag2services[service.get('Tag')] = services;",
+                    "});",
+                    "",
+                    "Ext.getStore('Services').each(function(service) {",
+                    "    var services = tag2services[service.get('Tag')];",
+                    "    services.push(service);",
+                    "});",
+                    "",
+                    "//#893 sequence builder should display alphabetically",
+                    "var sortedTags = Ext.Object.getKeys(tag2services).sort();",
+                    "",
+                    "var menu = button.menu;",
+                    "",
+                    "//iterate over each tag name",
+                    "Ext.each(sortedTags, function(tag) {",
+                    "    var tagItem = {",
+                    "        text: tag,",
+                    "        menu: {",
+                    "            items: []",
+                    "        }",
+                    "    };",
+                    "",
+                    "    //iterate over each service",
+                    "    Ext.each(tag2services[tag], function(service) {",
+                    "",
+                    "        //TERMINATE step cannot be created",
+                    "        if(service.get('Label') == 'Terminate') return;",
+                    "        var serviceItem = {",
+                    "            service: service.getId(),",
+                    "            text: service.get('Label'),",
+                    "            iconCls: service.get('Icon')",
+                    "        };",
+                    "",
+                    "        //add service item to tag",
+                    "        tagItem.menu.items.push(serviceItem);",
+                    "    });",
+                    "",
+                    "    //add tag item to menu",
+                    "    menu.add(tagItem);",
+                    "});"
+                ],
+                "name": "beforerender",
+                "scope": "me"
+            },
+            "name": "onButtonBeforeRender",
+            "designerId": "34ca9191-eb62-46e7-8cc2-83518621263f"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "menuitem",
+                "designer|targetType": "Ext.menu.Item",
+                "fn": "onMenuitemClick",
+                "implHandler": [
+                    "var me = this,",
+                    "    grid = me.getGrid(),",
+                    "    view = grid.getView(),",
+                    "    store = grid.getStore(),",
+                    "    apexClassId = item.service;",
+                    "",
+                    "view.mask('Saving...');",
+                    "Visualforce.remoting.Manager.invokeAction(",
+                    "    $RemoteAction.SequenceEditExtension.appendStep,",
+                    "    Id,",
+                    "    apexClassId,",
+                    "    function(step, event) {",
+                    "        if (event.status) {",
+                    "            //success",
+                    "            view.mask('Saving...');",
+                    "            store.load(function() {",
+                    "                view.unmask();",
+                    "            });",
+                    "        } else {",
+                    "            //failure",
+                    "            Ext.Msg.alert(",
+                    "                'Error appending step',",
+                    "                event.message",
+                    "            ).setIcon(Ext.Msg.ERROR);",
+                    "        }",
+                    "    }",
+                    ");"
+                ],
+                "name": "click",
+                "scope": "me"
+            },
+            "name": "onMenuitemClick",
+            "designerId": "82ad728f-aadb-4211-8e80-602953bf19df"
+        },
+        {
+            "type": "controllerref",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "ref": "grid",
+                "selector": "gridpanel#steps",
+                "xtype": "Ext.grid.Panel"
+            },
+            "name": "grid",
+            "designerId": "f012866d-f2e3-4ca9-b95b-95d0d8d6bfd6"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "#steps > gridview",
+                "designer|params": [
+                    "node",
+                    "data",
+                    "overModel",
+                    "dropPosition",
+                    "eOpts"
+                ],
+                "designer|targetType": "Ext.grid.View",
+                "fn": "onDrop",
+                "implHandler": [
+                    "var controller = this,",
+                    "    grid = data.view.ownerCt,",
+                    "    fromStep = data.records[0],",
+                    "    toStep = overModel,",
+                    "    store = grid.getStore();",
+                    "",
+                    "var beforeOrAfter;",
+                    "if ('before' == dropPosition) {",
+                    "    beforeOrAfter = $RemoteAction.SequenceEditExtension.moveStepBefore;",
+                    "} else if ('after' == dropPosition) {",
+                    "    beforeOrAfter = $RemoteAction.SequenceEditExtension.moveStepAfter;",
+                    "}",
+                    "",
+                    "grid.mask('Moving...');",
+                    "Visualforce.remoting.Manager.invokeAction(",
+                    "    beforeOrAfter,",
+                    "    fromStep.get('Name'),",
+                    "    toStep.get('Name'),",
+                    "    function(data, event) {",
+                    "        if (event.status) {",
+                    "            //success",
+                    "            grid.mask('Moving...');",
+                    "            store.load(function() {",
+                    "                grid.unmask();",
+                    "            });",
+                    "        } else {",
+                    "            //failure",
+                    "            Ext.Msg.alert(",
+                    "                'Error moving step',",
+                    "                event.message",
+                    "            ).setIcon(Ext.Msg.ERROR);",
+                    "        }",
+                    "    }",
+                    ");"
+                ],
+                "name": "drop",
+                "scope": "me"
+            },
+            "name": "onDrop",
+            "designerId": "54c1b0da-9c8f-456e-be1c-378b86ca8e0b"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "#steps > gridview",
+                "designer|params": [
+                    "dataview"
+                ],
+                "designer|targetType": "Ext.grid.View",
+                "fn": "onViewReady",
+                "implHandler": [
+                    "/**",
+                    " * COUPLES TO Builder.controller.Application#onConfigureLinkClick()",
+                    " * This closes the config popup if the clicks outside it.",
+                    " */",
+                    "var controller = this;",
+                    "",
+                    "Ext.get(window).on('focus', function() {",
+                    "    controller.getApplication().fireEvent('mainwindowfocus', controller);",
+                    "});"
+                ],
+                "name": "viewready",
+                "scope": "me"
+            },
+            "name": "onViewReady",
+            "designerId": "1491e6dc-6ea1-4ebf-b16e-8b79a339bb7d"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "#steps",
+                "designer|targetType": "Ext.grid.Panel",
+                "fn": "onLinkClick",
+                "implHandler": [
+                    "if ('configurelink' == e.target.className) {",
+                    "    this.onConfigureLinkClick.apply(this, arguments);",
+                    "} else if ('deletelink' == e.target.className) {",
+                    "    this.onDeleteLinkClick.apply(this, arguments);",
+                    "}"
+                ],
+                "name": "cellclick",
+                "scope": "me"
+            },
+            "name": "onLinkClick",
+            "designerId": "d4e13d9e-fa3e-419e-9a3b-3b231dd4423d"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "tableview",
+                    "td",
+                    "cellIndex",
+                    "record",
+                    "tr",
+                    "rowIndex",
+                    "e",
+                    "eOpts"
+                ],
+                "fn": "onConfigureLinkClick",
+                "implHandler": [
+                    "var me = this, //controller",
+                    "    y = window.screenTop || window.screenY,",
+                    "    x = window.screenLeft || window.screenX,",
+                    "    top = Math.round(Ext.Element.getViewportHeight() * 0.15) + y,",
+                    "    left = Math.round(Ext.Element.getViewportWidth() * 0.1) + x,",
+                    "    width = Math.round(Ext.Element.getViewportWidth() * 0.8),",
+                    "    height = Math.round(Ext.Element.getViewportHeight() * 0.8)",
+                    ";",
+                    "",
+                    "/**",
+                    " * COUPLES TO Builder.controller.Application#onViewReady()",
+                    " * This opens the config popup without any Clickjack issues.",
+                    " */",
+                    "Ext.getBody().mask();",
+                    "me.popup = window.open(",
+                    "    URLFOR[$Page.StepConfig].replace('000000000000000AAA', record.getId()),",
+                    "    'esb_config',",
+                    "    'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top + ',toolbar=no,status=no,directories=no,menubar=no,resizable=yes'",
+                    ");",
+                    "me.popup.focus();",
+                    "me.stepId = record.getId();//e.target.href.match(/\\/([A-Za-z0-9]{18})\\?/)[1]; //shitty id extraction"
+                ]
+            },
+            "name": "onConfigureLinkClick",
+            "designerId": "a9de3807-60a9-4ff1-a6d4-4b66865dea92"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "tableview",
+                    "td",
+                    "cellIndex",
+                    "record",
+                    "tr",
+                    "rowIndex",
+                    "e",
+                    "eOpts"
+                ],
+                "fn": "onDeleteLinkClick",
+                "implHandler": [
+                    "var grid = tableview;",
+                    "var store = grid.getStore();",
+                    "",
+                    "Ext.Msg.confirm('Delete Step', 'Are you sure?', function(btn) {",
+                    "    if (btn === 'yes') {",
+                    "        grid.mask('Deleting...');",
+                    "        Visualforce.remoting.Manager.invokeAction(",
+                    "            $RemoteAction.SequenceEditExtension.destroyStep,",
+                    "            Id,",
+                    "            record.get('Name'),",
+                    "            function(data, event) {",
+                    "                if (event.status) {",
+                    "                    //success, reload grid",
+                    "                    grid.mask('Deleting...');",
+                    "                    store.load(function() {",
+                    "                        grid.unmask();",
+                    "                    });",
+                    "                } else {",
+                    "                    //failure",
+                    "                    Ext.Msg.alert(",
+                    "                        'Error deleting step',",
+                    "                        event.message",
+                    "                    ).setIcon(Ext.Msg.ERROR);",
+                    "                }",
+                    "            }",
+                    "        );",
+                    "    }",
+                    "}).setIcon(Ext.Msg.WARNING);"
+                ]
+            },
+            "name": "onDeleteLinkClick",
+            "designerId": "14f7953d-cc09-48e6-8a6c-49e36a418151"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "gridpanel",
+                "designer|targetType": "Ext.grid.Panel",
+                "fn": "onDrag",
+                "implHandler": [
+                    "var view = tableview,",
+                    "    plugin = view.getPlugin('dragdrop'),",
+                    "    apexTypeName = record.get('ApexTypeName');",
+                    "",
+                    "plugin.dragZone.dragText = 'Move ' + apexTypeName + ' step here';"
+                ],
+                "name": "beforecellmousedown",
+                "scope": "me"
+            },
+            "name": "onDrag",
+            "designerId": "0e59075d-ce5e-4dd0-80e4-8d9d2ad8b4be"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "gridpanel",
+                "designer|targetType": "Ext.grid.Panel",
+                "fn": "onCellDoubleClick",
+                "implHandler": [
+                    "/**",
+                    " * Double click behaves like hitting Edit",
+                    " */",
+                    "var apexClassId = record.get('ApexClassId');",
+                    "var service = Ext.getStore('Services').getById(apexClassId);",
+                    "var config = service && service.get('StepConfig'); //#875 invalid service",
+                    "",
+                    "//some services have no configuration",
+                    "if (config) {",
+                    "    e.target = Ext.get(tr).down('a.configurelink').dom;",
+                    "    this.onConfigureLinkClick.apply(this, arguments);",
+                    "}"
+                ],
+                "name": "celldblclick",
+                "scope": "me"
+            },
+            "name": "onCellDoubleClick",
+            "designerId": "feac816a-0950-4163-819c-e6ba3ebea70f"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "menuitem",
+                "designer|targetType": "Ext.menu.Item",
+                "fn": "onMenuitemAfterRender",
+                "implHandler": [
+                    "/**",
+                    " * Displays a tooltip for each menu item under the 'New Step' button",
+                    " */",
+                    "var menuitem = component,",
+                    "    service = Ext.getStore('Services').getById(menuitem.service);",
+                    "",
+                    "//nothing to do if not a service",
+                    "if (!service) return;",
+                    "",
+                    "new Ext.ToolTip({",
+                    "    target: menuitem.el.dom,",
+                    "    html: service.get('Description'),",
+                    "    dismissDelay: 0,",
+                    "    shadow: true",
+                    "});"
+                ],
+                "name": "afterrender",
+                "scope": "me"
+            },
+            "name": "onMenuitemAfterRender",
+            "designerId": "e1d4da07-ab8f-4a5f-a3ae-8dc86416b714"
+        },
+        {
+            "type": "applicationaction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "controller"
+                ],
+                "fn": "onMainWindowFocus",
+                "implHandler": [
+                    "var store = Ext.getStore('Steps'),",
+                    "    grid = this.getGrid();",
+                    "",
+                    "Ext.getBody().unmask();",
+                    "",
+                    "/**",
+                    " * When user closes the configuration window, we reload the grid. Any",
+                    " * ConfigName changes will then be reflected for the user to see.",
+                    " * The main window is always refocussed by closing the configuration window.",
+                    " */",
+                    "if (controller.popup && !controller.popup.closed) {",
+                    "    //closes popup if defocussed",
+                    "    controller.popup.close();",
+                    "    delete controller.popup;",
+                    "}",
+                    "",
+                    "if (controller.stepId) {",
+                    "    //refreshes grid if configured",
+                    "    var stepId = controller.stepId;",
+                    "    delete controller.stepId;",
+                    "    grid.mask('Loading...');",
+                    "",
+                    "    //here is where we persist the step config name",
+                    "    Visualforce.remoting.Manager.invokeAction(",
+                    "        $RemoteAction.SequenceEditExtension.persistConfigNameOnStep,",
+                    "        stepId,",
+                    "        function(result, event) {",
+                    "            store.load(function() {",
+                    "                grid.unmask();",
+                    "            });",
+                    "        }",
+                    "    );",
+                    "}"
+                ],
+                "name": "mainwindowfocus",
+                "scope": "this"
+            },
+            "name": "onMainWindowFocus",
+            "designerId": "c7bafd69-96a3-4b42-b8a9-3391fd108f75"
+        }
+    ]
+}

@@ -1,0 +1,15 @@
+{
+    "type": "cssresource",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "css1",
+        "remote": true,
+        "url": "build/production/Builder/resources/Builder-all.css"
+    },
+    "name": "css1",
+    "designerId": "21361606-997b-4168-86b5-0fa51912fbb7"
+}

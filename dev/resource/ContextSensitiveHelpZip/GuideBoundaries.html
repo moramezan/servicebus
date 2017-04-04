@@ -1,0 +1,111 @@
+<h1>
+    Package Boundaries
+</h1>
+
+<h2>
+    External Boundary - Inbound
+</h2>
+
+<p>
+    External events (for example <em>"Time is 12:01"</em> or <em>"Stock price changed"</em>) are
+    not directly consumable by the Services Package. Instead, Service configurators make use of the
+    <code>Services.Enqueue.invoke()</code> method to transform an external events into event messages that are
+    consumable by the Services Package.
+</p>
+
+<p>
+    The <code>Services.Enqueue.invoke()</code> method supports several enqueue approaches, namely:
+</p>
+
+<ul>
+    <li>
+        <code>Map&lt;String,Object&gt; event = new Map&lt;String,Object&gt;{ 'ToSequence' => 'MySequence'};</code>
+    </li>
+
+    <li>
+        <code>Map&lt;String,Object&gt; event = new Map&lt;String,Object&gt;{ 'ToService' => 'MyService'};</code>
+    </li>
+
+    <li>
+        <code>Map&lt;String,Object&gt; event = new Map&lt;String,Object&gt;{ 'ToConfig' => 'MyConfig'};</code>
+    </li>
+</ul>
+
+<p>
+    Example Usage:
+</p>
+
+
+<blockquote style="margin-left:2em;">
+    <code>
+        Map&lt;String,Object&gt; event = new Map&lt;String,Object&gt;{
+        <br/>
+        &nbsp;&nbsp; 'ToSequence' => 'MySequence',
+        <br/>
+        &nbsp;&nbsp; 'RecordId' => '001000000000000aaa'
+        <br/>
+        };
+        <br/>
+        Id jobId = services.enqueue.invoke(event);
+    </code>
+</blockquote>
+
+
+
+<dl>
+    <dt>ToSequence</dt>
+    <dd>defines which sequence will respond to the injected event,in this case <em>MySequence</em></dd>
+    
+    <dt><code>RecordId</code></dt>
+    <dd>defines the SObject that will be subject to the processing steps, in this case <em>Account</em> instance</dd>
+</dl>
+
+<p>
+    Use the <code>Services.Enqueue.invoke()</code> method  whenever the data
+    related to the external event is retrievable as a Salesforce object using the object's
+    <code>Id</code>.
+</p>
+
+<p>
+    (see <a href="?topic=ApiNamespace">Api Guide</a> for further details.)
+</p>
+
+<h2>
+    External Boundary - Outbound
+</h2>
+
+<p>
+    Any service is free to communicate outside the boundary via:
+</p>
+
+<ul>
+    <li>HTTP callouts</li>
+    <li>the invocation of a workflow rules</li>
+    <li>DML operations, and/or</li>
+    <li>the sending of one or more email messages</li>
+</ul>
+
+<h2>
+    Internal Boundary
+</h2>
+
+<p>
+    All Sequences have a <em>Terminate</em> service as their final processing step. Conceptually,
+    this is very similar to a 'buffer stop' at the end of a railway line.
+</p>
+
+<p>
+    A <em>Terminate</em> processing step is automatically inserted when the sequence is created.
+</p>
+
+<p>
+    Sequences may interact with one another via one of four standard pre-packaged services, namely:
+</p>
+
+<ul>
+    <li><em>Jump</em></li>
+    <li><em>Transaction</em></li>
+    <li><em>Publish</em></li>
+    <li><em>Subscribe</em></li>
+</ul>
+

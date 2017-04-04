@@ -1,0 +1,330 @@
+<h1>
+    Performing HTTP Callouts
+</h1>
+
+<h2>
+    Context and Background
+</h2>
+
+<p>
+    Your service may need to connect to the Twitter api. Alternatively, consider the possibility that
+    the contents of a web page may need to be scraped on a regular basis and the content sent to one or more downstream
+    services. These scenarios all require the use of Http callouts.
+</p>
+
+
+
+<h2>
+    Salesforce System Constraints
+</h2>
+
+
+<p>
+    In any given execution context, Salesforce requires that callouts execute before DML. For this
+    reason, the Services Package expects that the service author perform all DML operations in the
+    <code>execute()</code>method and all callout operations limited to the <code>callout()</code>
+    method of the service.
+</p>
+
+<p>
+    <br/>
+</p>
+
+<h1>
+    Http Callout Tutorial
+</h1>
+
+
+<p>
+    In this tutorial, we demonstrate how to create a service that makes
+    a callout. Our service will scrape a web page and then store the content of that callout
+    standard Salesforce document SObject.
+</p>
+
+
+
+<h2>
+    Activity Specification
+</h2>
+
+<p>
+    Retrieve web content that will be used by other downstream services, specifically:
+</p>
+
+<ol>
+    <li>
+        Retrieve the Salesforce stock details of from the Yahoo finance page located at
+        <a href="https://finance.yahoo.com/q?s=crm/">CRM</a>
+    </li>
+    <li>
+        Store the page content.</li>
+    </li>
+    <li>
+        Facilitate downstream access to the content.
+        <p><br/></p>
+    </li>
+</ol>
+
+<h2>
+    Prerequisites
+</h2>
+
+<p>
+    Enable access to the web page by registering a new remote site.
+</p>
+
+<ol>
+    <li>
+        Click Setup &gt; Security Controls &gt; Remote Site Settings &gt; New Remote Site
+    </li>
+
+    <li>
+        <p>Enter the following details:</p>
+        <p><img src="resources/GuideCallouts/remote-site-details.png" /></p>
+    </li>
+
+    <li>
+        Click <strong>Save</strong>
+        <p><br/></p>
+    </li>
+</ol>
+
+<h2>
+    Create the Callout Service
+</h2>
+
+<ol>
+
+<li>
+        <p>
+           Create a class called  <code>ScrapeService</code> that implements the minimum service specification and press Save.
+        </p>
+
+<pre>
+global class ScrapeService extends Abstract.Service {
+
+    global class Definition extends Abstract.Service.Definition {
+        String Description = 'Scrapes the Salesforce stock (CRM) details.';
+    }
+
+    global override  List&lt;Map&lt;String,Object&gt;&gt;  execute(Map&lt;String,Object&gt; event) {
+        // output
+        return new List&lt;Map&lt;String,Object&gt;&gt;{event};
+    }
+}
+</pre>
+    </li>
+
+
+    <li>
+        <p>
+            Next, add appropriate attributes to the service description to properly describe your service
+            to the Services package and press Save.
+        </p>
+
+<pre>
+global class ScrapeService extends Abstract.Service {
+
+    global class Definition extends Abstract.Service.Definition {
+        String Description = 'Scrapes the Salesforce stock (CRM) details.';
+        String Tag = 'Connectors';
+        String Label = 'Salesforce (CRM) stock quote';
+        String Icon = 'feed_go';
+        Integer Chunks = 1;
+        String Cardinality = 'One';
+
+        Map&lt;String,String&gt; Outputs = new Map&lt;String,String&gt;{
+            'c:Data' =&gt; 'STRING representing data at www.salesforce.com endpoint.'
+        };
+    }
+
+    global override  List&lt;Map&lt;String,Object&gt;&gt;  execute(Map&lt;String,Object&gt; event) {
+        // output
+        return new List&lt;Map&lt;String,Object&gt;&gt;{event};
+    }
+}
+</pre>
+    </li>
+
+
+
+    <li>
+        <p>
+            Next, introduce the <code>callout()</code> method. This method should contain no DML statements.
+            Simerally, the <code>execute()</code> method should remain free of callouts.
+        </p>
+
+<pre>
+global class ScrapeService extends Abstract.Service {
+
+    global class Definition extends Abstract.Service.Definition {
+        String Description = 'Scrapes the Salesforce stock (CRM) details.';
+        String Tag = 'Connectors';
+        String Label = 'Salesforce (CRM) stock quote';
+        String Icon = 'feed_go';
+        Integer Chunks = 1;
+        String Cardinality = 'One';
+
+        Map&lt;String,String&gt; Outputs = new Map&lt;String,String&gt;{
+            'c:Data' =&gt; 'STRING representing data at www.salesforce.com endpoint.'
+        };
+    }
+
+    global override  void  callout(Map&lt;String,Object&gt; event) {
+        // ...
+    }
+
+    global override  List&lt;Map&lt;String,Object&gt;&gt;  execute(Map&lt;String,Object&gt; event) {
+        // output
+        return new List&lt;Map&lt;String,Object&gt;&gt;{event};
+    }
+}
+</pre>
+    </li>
+
+
+    <li>
+        <p>
+            Next, implement the callout to www.salesforce.com inside
+            the <code>callout()</code> method.
+        </p>
+
+<pre>
+global class ScrapeService extends Abstract.Service {
+
+    global class Definition extends Abstract.Service.Definition {
+        String Description = 'Scrapes the Salesforce stock (CRM) details.';
+        String Tag = 'Connectors';
+        String Label = 'Salesforce (CRM) stock quote';
+        String Icon = 'feed_go';
+        Integer Chunks = 1;
+        String Cardinality = 'One';
+
+        Map&lt;String,String&gt; Outputs = new Map&lt;String,String&gt;{
+            'c:Data' =&gt; 'STRING representing data at www.salesforce.com endpoint.'
+        };
+    }
+
+    global override  void  callout(Map&lt;String,Object&gt; event) {
+        Http http = new Http();
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint('https://finance.yahoo.com/q?s=crm');
+        req.setMethod('GET');
+        HttpResponse res = http.send(req);
+    }
+
+    global override  List&lt;Map&lt;String,Object&gt;&gt;  execute(Map&lt;String,Object&gt; event) {
+        // output
+        return new List&lt;Map&lt;String,Object&gt;&gt;{event};
+    }
+}
+</pre>
+    </li>
+
+
+    <li>
+        <p>
+            Finally, implement a mechanism to surface the response data in
+            the <code>execute()</code> method. Simply create an internal field
+            of type String called  <code>Data</code>  to achieve this.
+        </p>
+
+<pre>
+global class ScrapeService extends Abstract.Service {
+
+    global class Definition extends Abstract.Service.Definition {
+        String Description = 'Scrapes the Salesforce stock (CRM) details.';
+        String Tag = 'Connectors';
+        String Label = 'Salesforce (CRM) stock quote';
+        String Icon = 'feed_go';
+        Integer Chunks = 1;
+        String Cardinality = 'One';
+
+        Map&lt;String,String&gt; Outputs = new Map&lt;String,String&gt;{
+            'c:Data' =&gt; 'STRING representing data at www.salesforce.com endpoint.'
+        };
+    }
+
+    private String  Data;
+
+    global override  void  callout(Map&lt;String,Object&gt; event) {
+        Http http = new Http();
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint('https://finance.yahoo.com/q?s=crm');
+        req.setMethod('GET');
+        HttpResponse res = http.send(req);
+
+        this.Data = res.getBody();
+    }
+
+    global override  List&lt;Map&lt;String,Object&gt;&gt;  execute(Map&lt;String,Object&gt; event) {
+        // output
+        event.put('c:Data', this.Data);
+        return new List&lt;Map&lt;String,Object&gt;&gt;{event};
+    }
+}
+</pre>
+    <p><br/></p>
+    </li>
+
+</ol>
+
+
+
+<h2>
+    Visually test the  Callout Service
+</h2>
+
+<ol>
+    <li>
+        <p>
+            Navigate to the Sequences tab and create a new sequence called <em>Test Callout</em>.
+            Drag the newly created <code>CalloutService</code>  onto the sequence and arrange
+            the steps so that the Terminate service is the last step in the sequence
+        </p>
+
+        <p><img src="resources/GuideCallouts/sequence-test-callout.png" /></p>
+    </li>
+
+
+    <li>
+        <p>
+           Click the <em>Enqueue Test Event</em>  button to start the sequence.
+        </p>
+        <p><img src="resources/GuideCallouts/Enqueue-Test-JobId-Message.png" /></p>
+    </li>
+
+
+    <li>
+        <p>
+            Navigate to  the <em>Messages</em>  tab and set the list filter to <em>Completed</em>.
+        </p>
+        <p>
+            Your service executed as step #1 in the Test Callout sequence.
+            Assuming it executed correctly, it emitted a single <strong>output</strong> event.
+            This  output event will appear
+            as an <strong>input</strong> event for step #2 on the messages listing as shown below.
+            Go ahead and
+            click the message with a route called <code>1#Test Callout#2</code>
+            <fieldset>
+                <legend>
+                Note:
+                </legend>
+                Routes are defined by a composite key comprising </em>version, sequence and step</em>
+            </fieldset>
+        </p>
+
+        <p><img src="resources/GuideCallouts/messages-list.png" /></p>
+    </li>
+
+
+    <li>
+        <p>
+            The mark-up
+            representing the stock quote for CRM will be reflected on the <code>c:Data</code>  attribute
+            of the event as shown below.
+        </p>
+
+        <p><img src="resources/GuideCallouts/message-detail.png" /></p>
+    </li>
+</ol>

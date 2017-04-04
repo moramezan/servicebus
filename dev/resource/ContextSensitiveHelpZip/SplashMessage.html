@@ -1,0 +1,37 @@
+<h1>
+    Messages
+</h1>
+
+<p>
+    <img class="right" src="resources/Splashes/Message.png" />
+    An event is any real world occurrence with business significance, for example a request for payment.
+    <br />
+    Event parameters are represented by <code>Map&lt;String,Object&gt;</code>
+</p>
+
+<h2>
+    What is a message?
+</h2>
+
+<p>
+    A message is a container for recording an event.
+    Wrapping each event in a message gives a handle to identify it.
+    Because the event parameters are persisted inside the message,
+    you can re-attempt unprocessable events after an exception occurs.
+</p>
+
+<p>
+    If an exception happens, you can modify the service logic or the event data, then take action:
+</p>
+
+<dl>
+    <dt>Restart</dt>
+    <dd>
+        Attempt to reprocess one or many messages.
+    </dd>
+
+    <dt>Kill</dt>
+    <dd>
+        Discard messages that cannot be processed.
+    </dd>
+</dl>

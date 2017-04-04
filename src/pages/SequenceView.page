@@ -1,0 +1,3 @@
+<apex:page standardController="Sequence__c" action="{!URLFOR($Action.Sequence__c.Edit, Id)}">
+    <apex:pageMessages showDetail="true" />
+</apex:page>

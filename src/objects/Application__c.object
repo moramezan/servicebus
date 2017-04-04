@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>Hierarchy</customSettingsType>
+    <description>Holds the running or paused mode. Holds the namespace prefix needed to normalize custom buttons URLs and javascript. Holds the credentials needed to manage the Broker running user context. #774 formerly OAuth Setting.</description>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>BrokerIsInhibited__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Set this TRUE to interrupt a haywire Broker during development.</description>
+        <externalId>false</externalId>
+        <label>Broker Inhibit</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>BrokerIsPaused__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>When checked, this setting prevents new Messages from being worked on. They will still enter the queue, but unresolved in a &apos;Paused&apos; status.</description>
+        <externalId>false</externalId>
+        <label>Broker Paused</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>BrokerLastTimestamp__c</fullName>
+        <description>A timestamp representing the last time that a heartbeat message was successfully enqueued to the broker</description>
+        <externalId>false</externalId>
+        <inlineHelpText>What was the last heartbeat timestamp generated?</inlineHelpText>
+        <label>Broker Last Heartbeat Timestamp</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>OrgBaseUrl__c</fullName>
+        <description>The protocol and host (https://eu2.salesforce.com) of the actual instance. We need to hang onto this because it cannot be part of the callback URL. While the OAuth response indeed contains this, we don&apos;t know it at the time of making the OAuth request.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>What is the API protocol and host for this instance?</inlineHelpText>
+        <label>Org Instance URL</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>OrgConfigured__c</fullName>
+        <description>Without the 00D Key Prefix, so that the value does not get magically replaced when refreshing sandboxes etc.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>What was the unprefixed Organization Id at configuration time?</inlineHelpText>
+        <label>Org Id Configured</label>
+        <length>12</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>OrgIdConfigured__c</fullName>
+        <description>Without the 00D Key Prefix, so that the value does not get magically replaced when refreshing sandboxes etc.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>What was the unprefixed Organization Id at configuration time?</inlineHelpText>
+        <label>Org Id Configured</label>
+        <length>12</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>OrgInstanceUrl__c</fullName>
+        <description>The protocol and host (https://eu2.salesforce.com) of the actual instance. We need to hang onto this because it cannot be part of the callback URL. While the OAuth response indeed contains this, we don&apos;t know it at the time of making the OAuth request.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>What is the API protocol and host for this instance?</inlineHelpText>
+        <label>Org Instance URL</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>OrgReturnUrl__c</fullName>
+        <description>Used to redirect users back to some specific page after the configuration flow.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>What retURL will the user be redirected to afterwards?</inlineHelpText>
+        <label>Org Return URL</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>PrefixBar__c</fullName>
+        <description>String that would prefix a Salesforce Object to namespace it, eg &apos;ns__&apos; or null</description>
+        <externalId>false</externalId>
+        <inlineHelpText>What prefix should I use to fully qualify a Salesforce Object, including the trailing underscore underscore?</inlineHelpText>
+        <label>Namespace Prefix Bar (ns__)</label>
+        <length>17</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>PrefixDot__c</fullName>
+        <description>String that would prefix an Apex Class to namespace it, eg &apos;ns.&apos; or null</description>
+        <externalId>false</externalId>
+        <inlineHelpText>What prefix should I use to fully qualify an Apex Class, including the trailing dot?</inlineHelpText>
+        <label>Namespace Prefix Dot (ns.)</label>
+        <length>16</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Prefix__c</fullName>
+        <description>Raw namespace prefix, eg &apos;ns&apos; or null</description>
+        <externalId>false</externalId>
+        <inlineHelpText>What is my namespace prefix?</inlineHelpText>
+        <label>Namespace Prefix</label>
+        <length>15</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>RouterIsBusy__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Checked during commit, discard, checkout batch jobs.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Is the router in a busy state due to checkout, discard, commit?</inlineHelpText>
+        <label>Router Is Busy</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>RouterVersion__c</fullName>
+        <defaultValue>1</defaultValue>
+        <externalId>false</externalId>
+        <label>Router Version</label>
+        <precision>5</precision>
+        <required>true</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>RunAsAccessToken__c</fullName>
+        <description>Roaring and ready access token that can be used to invoke Salesforce APIs.</description>
+        <externalId>false</externalId>
+        <label>Run As Access Token</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>RunAsRefreshToken__c</fullName>
+        <description>The access token should be refreshed periodically using this refresh token.</description>
+        <externalId>false</externalId>
+        <label>Run As Refresh Token</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>RunAsUserId__c</fullName>
+        <defaultValue>$User.Id</defaultValue>
+        <description>Which User with a System Administrator profile performed the post install configuration ?</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Which User with a System Administrator profile performed the post install configuration ?</inlineHelpText>
+        <label>Run As User Id</label>
+        <length>18</length>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>Setting</label>
+    <visibility>Protected</visibility>
+</CustomObject>
