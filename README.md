@@ -6,6 +6,8 @@ That process showed us how we needed to change the services to make them behave 
 
 OASIS is used every day in AppExchange products and by Salesforce consultants. If you like the results, please comment and contribute.
 
+[![video-frame](https://cloud.githubusercontent.com/assets/6777144/24748894/dd4b2b70-1ac9-11e7-8ff1-7c3b0646458b.png)](https://vimeo.com/161619198?autoplay=1)
+
 # Example implementations
 
 - ![lightning](https://cloud.githubusercontent.com/assets/1878631/10218248/37fdadc8-682d-11e5-9134-86a8cdf5f9f4.png) [Webhooks connector for Salesforce](https://github.com/bigassforce/webhooks)
