@@ -47,7 +47,7 @@ The use of a '[service definition](https://github.com/bigassforce/oasis/blob/mas
 
 ```
 Boolean isService(String className) {
-    Type reflector = className + '.' + 'Definition';
+    Type reflector = Type.forName(className + '.' + 'Definition');
     return reflector != null;
 }
 ```
