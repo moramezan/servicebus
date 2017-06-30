@@ -177,9 +177,9 @@ public class ApexClassSetModel extends ApexDomain.StandardSetModel {
             SELECT NamespacePrefix
             FROM ApexClass
             WHERE NamespacePrefix != 'abstract'
-            AND NamespacePrefix != null
             GROUP BY NamespacePrefix
             HAVING COUNT(Id) < 1000
+            OR NamespacePrefix = null
         ];
         
         Set<String> namespaces = new Set<String>();
